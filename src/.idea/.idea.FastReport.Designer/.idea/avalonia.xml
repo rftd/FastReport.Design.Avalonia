@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="FastReport.Designer/App.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/MainWindow.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/Views/MainWindow.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
