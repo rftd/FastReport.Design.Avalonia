@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +14,6 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
-using ZipArchive = System.IO.Compression.ZipArchive;
 
 namespace FastReport.Designer.Services;
 
@@ -214,12 +212,8 @@ public sealed class FrPluginManager : IDisposable
                     packageToInstall, new PackageDownloadContext(sourceCacheContext),
                     CacheDirectory, NullLogger.Instance, CancellationToken.None);
 
-                await PackageExtractor.ExtractPackageAsync(
-                    downloadResult.PackageSource,
-                    downloadResult.PackageStream,
-                    packagePathResolver,
-                    packageExtractionContext,
-                    CancellationToken.None);
+                await PackageExtractor.ExtractPackageAsync(downloadResult.PackageSource, downloadResult.PackageStream,
+                    packagePathResolver, packageExtractionContext, CancellationToken.None);
 
                 packageReader = downloadResult.PackageReader;
             }
@@ -268,12 +262,10 @@ public sealed class FrPluginManager : IDisposable
             token: CancellationToken.None);
     }
     
-    private async Task GetPackageDependencies(PackageIdentity package,
-        NuGetFramework framework, SourceRepository repository,
-        ISet<SourcePackageDependencyInfo> availablePackages)
+    private async Task GetPackageDependencies(PackageIdentity package, NuGetFramework framework, 
+        SourceRepository repository, ISet<SourcePackageDependencyInfo> availablePackages)
     {
         if (availablePackages.Contains(package)) return;
-
 
         var dependencyInfoResource = await repository.GetResourceAsync<DependencyInfoResource>();
         var dependencyInfo = await dependencyInfoResource.ResolvePackage(
@@ -313,7 +305,7 @@ public sealed class FrPluginManager : IDisposable
         return Repository.Factory.GetCoreV3(source);
     }
 
-    private void ClearFolder(string folderName)
+    private static void ClearFolder(string folderName)
     {
         var dir = new DirectoryInfo(folderName);
         foreach (var di in dir.GetDirectories())
