@@ -1,30 +1,40 @@
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using AvaloniaEdit.Utils;
+using Caramelo.MvvmApp.Avalonia.Controls;
+using FastReport.Designer.ViewModels;
+using ReactiveMarbles.ObservableEvents;
+using ReactiveUI;
 
 namespace FastReport.Designer.Views;
 
-public partial class MainWindow : Window
+public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
 {
-    public MainWindow()
+    public AppBootstrapperView()
     {
         InitializeComponent();
+        
+        this.WhenActivated(disposables =>
+        {
+            this.Bind(ViewModel, viewModel => viewModel.Report, view => view.DesignerControl.Report)
+                .DisposeWith(disposables);
+        });
 
-        DesignerControl.Report = new Report();
-        Loaded += (_, _) =>
+        this.Events().Loaded.Subscribe(_ =>
         {
             DesignerControl.RestoreConfig();
             DesignerControl.StartAutoSave();
-        };
+        });
         
-        Closing += (_, e) => 
+        this.Events().Closing.Subscribe(e =>
         {
             DesignerControl.ParentWindowClosing(e);
             if (e.Cancel) return;
             
             DesignerControl.SaveConfig();
             DesignerControl.StopAutoSave();
-        };
+        });
 
         this.GetObservable(ClientSizeProperty).Subscribe(_ =>
         {

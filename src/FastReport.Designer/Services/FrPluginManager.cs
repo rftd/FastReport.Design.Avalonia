@@ -26,6 +26,7 @@ public sealed class FrPluginManager : IDisposable
     private readonly string[] excludesPlugins = ["FastReport.Data.MsSql"];
     private readonly SourceCacheContext sourceCacheContext;
     private bool disposedValue;
+    private List<FrPlugin> availablePlugins;
     private List<FrPlugin> installedPlugins;
 
     #endregion Fields
@@ -34,11 +35,11 @@ public sealed class FrPluginManager : IDisposable
     
     public FrPluginManager()
     {
+        availablePlugins = new List<FrPlugin>();
         installedPlugins = new List<FrPlugin>();
         sourceCacheContext = new SourceCacheContext();
         PluginDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
         CacheDirectory = Path.Combine(Environment.CurrentDirectory, "Cache");
-        LoadPLugins();
     }
     
     ~FrPluginManager()
@@ -60,41 +61,17 @@ public sealed class FrPluginManager : IDisposable
 
     public string? Password { get; set; }
 
+    public FrPlugin[] AvailablePlugins => availablePlugins.ToArray();
+    
     public FrPlugin[] InstaledPLugins => installedPlugins.ToArray();
  
     #endregion Properties
 
     #region Methods
-
-    private async void LoadPLugins()
-    {
-        installedPlugins.Clear();
-        var repository = GetRepository();
-        var resource = await repository.GetResourceAsync<PackageMetadataResource>();
-        
-        var plugins = Utils.Config.Root.FindItem("Plugins");
-        foreach (var item in plugins.Items)
-        {
-            var name = Path.GetFileNameWithoutExtension(item.GetProp("Name"));
-            var id = item.GetProp("Id");
-            if (string.IsNullOrEmpty(id))
-                id = name;
-            
-            var versao = item.GetProp("Version");
-            if (string.IsNullOrEmpty(versao))
-                versao = Utils.Config.Version;
-            
-            var packageIdentity = new PackageIdentity(id, NuGetVersion.Parse(versao));
-            var metadata = await resource.GetMetadataAsync(packageIdentity, sourceCacheContext, 
-                NullLogger.Instance, CancellationToken.None);
-            
-            
-            installedPlugins.Add(new FrPlugin(id: id, name: name, description: metadata.Description, version: versao));
-        }
-    }
     
-    public async Task<FrPlugin[]> GetPluginsAsync()
+    public async Task LoadPluginsAsync()
     {
+        availablePlugins.Clear();
         var repository = GetRepository();
         var resource = await repository.GetResourceAsync<PackageSearchResource>();
         var searchFilter = new SearchFilter(includePrerelease: false);
@@ -120,21 +97,20 @@ public sealed class FrPluginManager : IDisposable
         } while (results.Any());
 
         var version = NuGetVersion.Parse(Utils.Config.Version);
-        var plugins = new List<FrPlugin>();
         foreach (var metadata in metadatas)
         {
             var versions = await metadata.GetVersionsAsync();
             var package = versions.SingleOrDefault(x => x.Version == version);
             if(package == null) continue;
             
-            plugins.Add(new FrPlugin(
+            availablePlugins.Add(new FrPlugin(
                 id: metadata.Identity.Id,
                 version: Utils.Config.Version,
                 name: metadata.Title,
                 description: metadata.Description));
         }
         
-        return plugins.ToArray();
+        LoadInstaledPlugins();
     }
     
     public async Task InstallAsync(FrPlugin plugin)
@@ -177,6 +153,28 @@ public sealed class FrPluginManager : IDisposable
         ClearFolder(PluginDirectory);
     }
 
+    private void LoadInstaledPlugins()
+    {
+        installedPlugins.Clear();
+        
+        var plugins = Utils.Config.Root.FindItem("Plugins");
+        foreach (var item in plugins.Items)
+        {
+            var id = item.GetProp("Id");
+            if (string.IsNullOrEmpty(id))
+                id = Path.GetFileNameWithoutExtension(item.GetProp("Name"));
+
+            var plugin = availablePlugins.Find(x => x.Id == id);
+            if(plugin == null) continue;
+            
+            var version = item.GetProp("Version");
+            if (string.IsNullOrEmpty(id))
+                version = plugin.Version;
+            
+            installedPlugins.Add(new FrPlugin(plugin.Id, plugin.Name, plugin.Description, version));
+        }
+    }
+    
     private async Task InstallDependencies(PackageIdentity packageId,
         NuGetFramework frameworkVersion, SourceRepository repository)
     {

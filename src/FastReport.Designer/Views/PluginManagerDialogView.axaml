@@ -1,0 +1,18 @@
+﻿<mvvm:MvvmUserControl x:TypeArguments="vm:PluginManagerDialogViewModel" 
+                      x:Class="FastReport.Designer.Views.PluginManagerDialogView"
+                      xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
+                      xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
+                      mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300">
+    
+    <Design.DataContext>
+        <vm:PluginManagerDialogViewModel/>
+    </Design.DataContext>
+    
+    <Grid>
+        <Button Command="{Binding ReloadPluginsCommand}"/>
+    </Grid>
+</mvvm:MvvmUserControl>

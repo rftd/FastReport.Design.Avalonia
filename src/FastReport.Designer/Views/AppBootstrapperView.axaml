@@ -1,16 +1,25 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fr="clr-namespace:FastReport.Design;assembly=FastReport.Avalonia"
-        xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="FastReport.Designer.Views.MainWindow" WindowState="Maximized"
-        Icon="/Assets/Designer.ico" CornerRadius="10"
-        Title="FastReport Designer Avalonia">
+<controls:MvvmWindow x:TypeArguments="vm:AppBootstrapperViewModel" 
+                 xmlns="https://github.com/avaloniaui"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:fr="clr-namespace:FastReport.Design;assembly=FastReport.Avalonia"
+                 xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
+                 xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
+                 xmlns:rui="http://reactiveui.net"
+                 xmlns:controls="https://github.com/rftd/Caramelo.MvvmApp"
+                 xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                 x:Class="FastReport.Designer.Views.AppBootstrapperView" WindowState="Maximized"
+                 Icon="/Assets/Designer.ico" CornerRadius="10"
+                 Title="FastReport Designer Avalonia">
+    
+    <Design.DataContext>
+        <vm:AppBootstrapperViewModel/>
+    </Design.DataContext>
     
     <DockPanel>
-        <actipro:ChromedTitleBar DockPanel.Dock="Top" >
+        <actipro:ChromedTitleBar DockPanel.Dock="Top"  >
             <actipro:ChromedTitleBar.Resources>
                 <actipro:ComparisonConverter x:Key="RightContentMarginConverter">
                     <actipro:ComparisonConverter.TrueResult>
@@ -39,16 +48,21 @@
             <actipro:ChromedTitleBar.RightContent>
                 <StackPanel Margin="{Binding $parent[actipro:ChromedTitleBar].HasCaptionButtons, Converter={StaticResource RightContentMarginConverter}}" Orientation="Horizontal">
                     <Button ToolTip.Tip="Plugin Manager"
-                        Theme="{actipro:ControlTheme TitleBarButton}">
-                        <actipro:DynamicImage Width="16" Height="16" Source="/Assets/Designer.ico" />
-                    </Button>
+                            Content="{avalonia:MaterialIconExt Kind=Plugin}"
+                            Theme="{actipro:ControlTheme TitleBarButton}"/>
                 </StackPanel>
             </actipro:ChromedTitleBar.RightContent>
         </actipro:ChromedTitleBar>
         
         <Border x:Name="ContentArea" Background="Transparent" BorderBrush="{actipro:ThemeResource Container2BorderBrush}" 
                 BorderThickness="0,0,0,8">
-            <fr:AvaloniaDesignerControl Name="DesignerControl" />
+            <rui:RoutedViewHost DockPanel.Dock="Top" Router="{Binding Router}"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch">
+                <rui:RoutedViewHost.DefaultContent>
+                    <fr:AvaloniaDesignerControl Name="DesignerControl" />
+                </rui:RoutedViewHost.DefaultContent>
+            </rui:RoutedViewHost>
         </Border>
     </DockPanel>
-</Window>
+</controls:MvvmWindow>

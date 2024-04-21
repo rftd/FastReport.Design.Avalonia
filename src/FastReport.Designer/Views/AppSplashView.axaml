@@ -1,0 +1,25 @@
+﻿<controls:MvvmWindow x:TypeArguments="vm:AppSplashViewModel"  
+                  xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
+                  xmlns:controls="https://github.com/rftd/Caramelo.MvvmApp"
+                  mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="300"
+                  x:Class="FastReport.Designer.Views.AppSplashView"
+                  Title="SplashScreen" Width="500" Height="300"
+                  WindowStartupLocation="CenterScreen" SystemDecorations="None"
+                  Topmost="True">
+    
+    <Design.DataContext>
+        <vm:AppSplashViewModel/>
+    </Design.DataContext>
+    
+    <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="5">
+        <StackPanel Width="500" Height="300">
+            <StackPanel.Background>
+                <ImageBrush Source="/Assets/Splash.png" Stretch="Fill" />
+            </StackPanel.Background>
+        </StackPanel> 
+    </Border>
+</controls:MvvmWindow>

@@ -1,6 +1,8 @@
-﻿namespace FastReport.Designer.Services;
+﻿using System;
 
-public class FrPlugin
+namespace FastReport.Designer.Services;
+
+public class FrPlugin : IComparable<FrPlugin>, IEquatable<FrPlugin>
 {
     #region Constructors
 
@@ -25,4 +27,35 @@ public class FrPlugin
     public string Version { get; } 
 
     #endregion Properties
+
+    #region Methods
+
+    public bool Equals(FrPlugin? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Id == other.Id && Version == other.Version;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType() && Equals((FrPlugin) obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Version);
+    }
+
+    public int CompareTo(FrPlugin? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (ReferenceEquals(null, other)) return 1;
+        var idComparison = string.Compare(Id, other.Id, StringComparison.Ordinal);
+        return idComparison != 0 ? idComparison : string.Compare(Version, other.Version, StringComparison.Ordinal);
+    }
+
+    #endregion Methods
 }
