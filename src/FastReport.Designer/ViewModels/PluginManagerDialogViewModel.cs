@@ -98,8 +98,20 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
     
     private async Task UninstallPluginsAsync()
     {
-        // foreach (var plugin in PluginsToUninstall)
-        //     await manager.InstallAsync(plugin);
+        IsBusy = true;
+
+        try
+        {
+            foreach (var plugin in PluginsToUninstall)
+                await manager.UninstallAsync(plugin);
+        
+            InstaledPLugins.RemoveMany(PluginsToUninstall);
+            PluginsToUninstall.Clear();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     #endregion Methods

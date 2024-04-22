@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FastReport.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
@@ -25,6 +26,7 @@ public sealed class FrPluginManager : IDisposable
     private const string FrNugetFeed = "https://nuget.fast-report.com/api/v3/index.json";
     private readonly string[] excludesPlugins = ["FastReport.Data.MsSql"];
     private readonly SourceCacheContext sourceCacheContext;
+    private readonly PackageDownloadContext downloadContext;
     private bool disposedValue;
     private List<FrPlugin> availablePlugins;
     private List<FrPlugin> installedPlugins;
@@ -38,6 +40,7 @@ public sealed class FrPluginManager : IDisposable
         availablePlugins = new List<FrPlugin>();
         installedPlugins = new List<FrPlugin>();
         sourceCacheContext = new SourceCacheContext();
+        downloadContext = new PackageDownloadContext(sourceCacheContext);
         PluginDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
         CacheDirectory = Path.Combine(Environment.CurrentDirectory, "Cache");
     }
@@ -82,13 +85,8 @@ public sealed class FrPluginManager : IDisposable
         IEnumerable<IPackageSearchMetadata> results;
         do
         {
-            var ret = await resource.SearchAsync(
-                "FastReport.Data.",
-                searchFilter,
-                skip: 20 * page,
-                take: 20,
-                NullLogger.Instance,
-                CancellationToken.None);
+            var ret = await resource.SearchAsync("FastReport.Data.", searchFilter, 
+                skip: 20 * page, take: 20, NullLogger.Instance, CancellationToken.None);
 
             results = ret.ToArray();
             metadatas.AddRange(results.Where(x => x.Identity.Id.StartsWith("FastReport.Data.") &&
@@ -96,7 +94,7 @@ public sealed class FrPluginManager : IDisposable
             page++;
         } while (results.Any());
 
-        var version = NuGetVersion.Parse(Utils.Config.Version);
+        var version = NuGetVersion.Parse(Config.Version);
         foreach (var metadata in metadatas)
         {
             var versions = await metadata.GetVersionsAsync();
@@ -105,7 +103,7 @@ public sealed class FrPluginManager : IDisposable
             
             availablePlugins.Add(new FrPlugin(
                 id: metadata.Identity.Id,
-                version: Utils.Config.Version,
+                version: metadata.Identity.Version.ToString(),
                 name: metadata.Title,
                 description: metadata.Description));
         }
@@ -115,7 +113,7 @@ public sealed class FrPluginManager : IDisposable
     
     public async Task InstallAsync(FrPlugin plugin)
     {
-        if(installedPlugins.Any(x => x.Id == plugin.Id))
+        if(installedPlugins.Any(x => x.Equals(plugin)))
             throw new Exception("Plugin já instalado");
         
         var repository = GetRepository();
@@ -134,15 +132,16 @@ public sealed class FrPluginManager : IDisposable
         var lib = reader.GetFiles().SingleOrDefault(x => x == item);
         if (lib == null) throw new ApplicationException("Plugin Não encontrado");
 
-        if (!Directory.Exists(PluginDirectory))
-            Directory.CreateDirectory(PluginDirectory);
- 
-        await reader.CopyFilesAsync(PluginDirectory, [item], SaveFile, 
-            NullLogger.Instance, CancellationToken.None);
+        var pluginPath = Path.Combine(PluginDirectory, plugin.Id);
+        
+        if (!Directory.Exists(pluginPath))
+            Directory.CreateDirectory(pluginPath);
+
+        await SaveFileAsync(Path.Combine(pluginPath, $"{plugin.Id}.dll"), reader.GetStream(item));
 
         await InstallDependencies(packageId, frameworkVersion, repository);
         
-        var plugins = Utils.Config.Root.FindItem("Plugins");
+        var plugins = Config.Root.FindItem("Plugins");
         var pluginElement = plugins.Add();
         pluginElement.Name = "Plugin";
         pluginElement.SetProp("Name", Path.Combine(PluginDirectory, $"{plugin.Id}.dll"));
@@ -150,14 +149,35 @@ public sealed class FrPluginManager : IDisposable
         pluginElement.SetProp("Version", plugin.Version);
         
         installedPlugins.Add(plugin);
-        ClearFolder(PluginDirectory);
     }
 
+    public Task UninstallAsync(FrPlugin plugin)
+    {
+        if(installedPlugins.All(x => !x.Equals(plugin)))
+            throw new Exception("Plugin não esta instalado instalado");
+        
+        var plugins = Config.Root.FindItem("Plugins");
+
+        foreach (var item in plugins.Items)
+        {
+            var id = item.GetProp("Id");
+            if (string.IsNullOrEmpty(id))
+                id = Path.GetFileNameWithoutExtension(item.GetProp("Name"));
+
+            if (id != plugin.Id) continue;
+            
+            item.SetProp("Uninstall", "true");
+            break;
+        }
+        
+        return Task.CompletedTask;
+    }
+    
     private void LoadInstaledPlugins()
     {
         installedPlugins.Clear();
         
-        var plugins = Utils.Config.Root.FindItem("Plugins");
+        var plugins = Config.Root.FindItem("Plugins");
         foreach (var item in plugins.Items)
         {
             var id = item.GetProp("Id");
@@ -178,8 +198,9 @@ public sealed class FrPluginManager : IDisposable
     private async Task InstallDependencies(PackageIdentity packageId,
         NuGetFramework frameworkVersion, SourceRepository repository)
     {
+        var pluginPath = Path.Combine(PluginDirectory, packageId.Id);
         var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
-        await GetPackageDependencies(packageId, frameworkVersion, repository, availablePackages);
+        await GetPackageDependenciesInfo(packageId, frameworkVersion, repository, availablePackages);
         
         var resolverContext = new PackageResolverContext(
             DependencyBehavior.Lowest, [packageId.Id],
@@ -200,67 +221,59 @@ public sealed class FrPluginManager : IDisposable
         
         foreach (var packageToInstall in packagesToInstall)
         {
-            PackageReaderBase packageReader;
+            PackageReaderBase reader;
             var installedPath = packagePathResolver.GetInstalledPath(packageToInstall);
             
             if (installedPath == null)
             {
-                var downloadResource = await packageToInstall.Source.GetResourceAsync<DownloadResource>(CancellationToken.None);
-                var downloadResult = await downloadResource.GetDownloadResourceResultAsync(
-                    packageToInstall, new PackageDownloadContext(sourceCacheContext),
-                    CacheDirectory, NullLogger.Instance, CancellationToken.None);
+                var downloadResult = await DownloadPackage(repository, packageToInstall);
+                await PackageExtractor.ExtractPackageAsync(downloadResult.PackageSource, 
+                    downloadResult.PackageStream, packagePathResolver, packageExtractionContext, 
+                    CancellationToken.None);
 
-                await PackageExtractor.ExtractPackageAsync(downloadResult.PackageSource, downloadResult.PackageStream,
-                    packagePathResolver, packageExtractionContext, CancellationToken.None);
-
-                packageReader = downloadResult.PackageReader;
+                reader = downloadResult.PackageReader;
             }
             else
             {
-                packageReader = new PackageFolderReader(installedPath);
+                reader = new PackageFolderReader(installedPath);
             }
             
-            var libItems = packageReader.GetLibItems().ToArray();
+            var libItems = reader.GetLibItems().ToArray();
             var nearest = frameworkReducer.GetNearest(frameworkVersion, libItems.Select(x => x.TargetFramework));
             var items = libItems.Where(x => x.TargetFramework.Equals(nearest))
                 .SelectMany(x => x.Items).Where(x => x.EndsWith(".dll")).ToArray();
-
-            await packageReader.CopyFilesAsync(AppDomain.CurrentDomain.BaseDirectory, items, SaveFile, 
-                NullLogger.Instance, CancellationToken.None);
             
-            var frameworkItems = packageReader.GetFrameworkItems().ToArray();
+            foreach (var item in items)
+                await SaveFileAsync(Path.Combine(pluginPath, Path.GetFileName(item)), reader.GetStream(item));
+           
+            var frameworkItems = reader.GetFrameworkItems().ToArray();
             nearest = frameworkReducer.GetNearest(frameworkVersion, frameworkItems.Select(x => x.TargetFramework));
 
             items = frameworkItems.Where(x => x.TargetFramework.Equals(nearest))
                 .SelectMany(x => x.Items).Where(x => x.EndsWith(".dll")).ToArray();
             
-            await packageReader.CopyFilesAsync(AppDomain.CurrentDomain.BaseDirectory, items, SaveFile, 
-                NullLogger.Instance, CancellationToken.None);
+            foreach (var item in items)
+                await SaveFileAsync(Path.Combine(pluginPath, Path.GetFileName(item)), reader.GetStream(item));
         }
     }
 
-    private string SaveFile(string sourceFile, string targetPath, Stream stream)
+    private static async Task SaveFileAsync(string targetPath, Stream stream)
     {
-        var filePath = Path.Combine(PluginDirectory, Path.GetFileName(sourceFile));
-
-        if (File.Exists(filePath))
-            File.Replace(filePath, sourceFile, null);
-        else
-            stream.CopyToFile(filePath);
-
-        return filePath;
+        await using var fileStream = File.Open(targetPath, FileMode.OpenOrCreate);
+        fileStream.Position = 0;
+        await stream.CopyToAsync(fileStream);
+        fileStream.SetLength(fileStream.Position);
     }
     
     private async Task<DownloadResourceResult> DownloadPackage(SourceRepository repository, PackageIdentity packageId)
     {
         var resource = await repository.GetResourceAsync<DownloadResource>();
         return await resource.GetDownloadResourceResultAsync(
-            packageId, new PackageDownloadContext(sourceCacheContext),
-            globalPackagesFolder: CacheDirectory, logger: NullLogger.Instance,
-            token: CancellationToken.None);
+            packageId, downloadContext, globalPackagesFolder: CacheDirectory, 
+            logger: NullLogger.Instance, token: CancellationToken.None);
     }
     
-    private async Task GetPackageDependencies(PackageIdentity package, NuGetFramework framework, 
+    private async Task GetPackageDependenciesInfo(PackageIdentity package, NuGetFramework framework, 
         SourceRepository repository, ISet<SourcePackageDependencyInfo> availablePackages)
     {
         if (availablePackages.Contains(package)) return;
@@ -274,7 +287,7 @@ public sealed class FrPluginManager : IDisposable
         availablePackages.Add(dependencyInfo);
         foreach (var dependency in dependencyInfo.Dependencies)
         {
-            await GetPackageDependencies(
+            await GetPackageDependenciesInfo(
                 new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion),
                 framework, repository, availablePackages);
         }
@@ -309,6 +322,9 @@ public sealed class FrPluginManager : IDisposable
         foreach (var di in dir.GetDirectories())
         {
             ClearFolder(di.FullName);
+            foreach (var file in di.GetFiles())
+                File.Delete(file.FullName);
+            
             di.Delete();
         }
     }

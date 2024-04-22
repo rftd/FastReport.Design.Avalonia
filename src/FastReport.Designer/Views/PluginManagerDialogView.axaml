@@ -59,7 +59,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type plugin:FrPlugin}">
                             <DockPanel LastChildFill="True" Width="350">
-                                <TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold"/>
+                                <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
                             </DockPanel>
                         </DataTemplate>
@@ -78,7 +78,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type plugin:FrPlugin}">
                             <DockPanel LastChildFill="True" Width="350">
-                                <TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold"/>
+                                <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
                             </DockPanel>
                         </DataTemplate>

@@ -19,6 +19,8 @@ public class FrPlugin : IComparable<FrPlugin>, IEquatable<FrPlugin>
     #region Properties
 
     public string Id { get; }
+
+    public string NameVersion => $"{Name} - {Version}";
     
     public string Name { get; }
     

@@ -16,10 +16,13 @@
     </Design.DataContext>
     
     <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="5">
-        <StackPanel Width="500" Height="300">
-            <StackPanel.Background>
+        <DockPanel Width="500" Height="300">
+            <DockPanel.Background>
                 <ImageBrush Source="/Assets/Splash.png" Stretch="Fill" />
-            </StackPanel.Background>
-        </StackPanel> 
+            </DockPanel.Background>
+            <TextBlock DockPanel.Dock="Bottom" Text="{Binding Message}" FontWeight="Bold"
+                       Margin="10" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom"
+                       IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+        </DockPanel> 
     </Border>
 </controls:MvvmWindow>
