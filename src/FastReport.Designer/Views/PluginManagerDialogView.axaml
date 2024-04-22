@@ -1,4 +1,4 @@
-﻿<mvvm:MvvmUserControl x:TypeArguments="vm:PluginManagerDialogViewModel" 
+﻿<mvvm:MvvmWindow x:TypeArguments="vm:PluginManagerDialogViewModel" 
                       x:Class="FastReport.Designer.Views.PluginManagerDialogView"
                       xmlns="https://github.com/avaloniaui"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,13 +6,88 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                       xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
-                      mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300">
+                      xmlns:plugin="clr-namespace:FastReport.Designer.Services"
+                      xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
+                      xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                      mc:Ignorable="d" Width="900" Height="600" CanResize="False">
     
     <Design.DataContext>
         <vm:PluginManagerDialogViewModel/>
     </Design.DataContext>
     
-    <Grid>
-        <Button Command="{Binding ReloadPluginsCommand}"/>
-    </Grid>
-</mvvm:MvvmUserControl>
+    <DockPanel LastChildFill="True">
+        <actipro:ChromedTitleBar DockPanel.Dock="Top"
+                                 IsCloseButtonAllowed="False"
+                                 IsMinimizeButtonAllowed="False"
+                                 IsMaximizeButtonAllowed="False">
+            <actipro:ChromedTitleBar.LeftContent>
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="15, 0, 0, 0" x:Name="ViewImage" DockPanel.Dock="Left" Width="24" Height="24" 
+                           Source="/Assets/Designer.ico" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <Image.Effect>
+                            <DropShadowEffect OffsetX="0" OffsetY="1" BlurRadius="3" Opacity="{DynamicResource {actipro:ThemeResourceKey ShadowOpacity}}" />
+                        </Image.Effect>
+                    </Image>
+
+                    <StackPanel Margin="10,7,0,7" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock Text="Fast Report" FontSize="12" TextTrimming="CharacterEllipsis" Opacity="0.85" />
+                        <TextBlock Margin="0,-2,0,0" Text="Plugin Manager" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </StackPanel>
+            </actipro:ChromedTitleBar.LeftContent>
+            <actipro:ChromedTitleBar.RightContent>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding CloseDialogCommand}"
+                            Content="{avalonia:MaterialIconExt Kind=Close}"
+                            Theme="{actipro:ControlTheme TitleBarButton}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="Red" />
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </StackPanel>
+            </actipro:ChromedTitleBar.RightContent>
+        </actipro:ChromedTitleBar>
+        <Grid RowDefinitions="*,60" ColumnDefinitions="*, *">
+            <DockPanel Grid.Row="0" Grid.Column="0" Margin="20,20,10,0">
+                <TextBlock Margin="0 5" DockPanel.Dock="Top" FontWeight="Bold">Plugins Disponíveis</TextBlock>
+                <ListBox SelectionMode="Multiple, Toggle" BorderThickness="1"
+                         IsEnabled="{Binding !IsBusy}"
+                         ItemsSource="{Binding  AvailablePlugins}" 
+                         SelectedItems="{Binding PluginsToInstall}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type plugin:FrPlugin}">
+                            <DockPanel LastChildFill="True" Width="350">
+                                <TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <StackPanel Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Right">
+                <Button Width="80" Command="{Binding InstallCommand}" Content="Install"/>
+            </StackPanel>
+            <DockPanel Grid.Row="0" Grid.Column="1" Margin="10,20,20,0">
+                <TextBlock Margin="0 5" DockPanel.Dock="Top" FontWeight="Bold">Plugins Instalados</TextBlock>
+                <ListBox SelectionMode="Multiple, Toggle" BorderThickness="1"
+                         IsEnabled="{Binding !IsBusy}"
+                         ItemsSource="{Binding  InstaledPLugins}"
+                         SelectedItems="{Binding PluginsToUninstall}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type plugin:FrPlugin}">
+                            <DockPanel LastChildFill="True" Width="350">
+                                <TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,10,20,10" HorizontalAlignment="Right">
+                <Button Width="80" Command="{Binding UninstallCommand}" Content="Uninstall"/>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</mvvm:MvvmWindow>

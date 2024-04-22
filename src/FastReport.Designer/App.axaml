@@ -6,7 +6,7 @@
                       xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                       xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                       x:Class="FastReport.Designer.App"
-                      RequestedThemeVariant="Default">
+                      RequestedThemeVariant="Light">
     <Application.Styles>
         <actipro:ModernTheme />
         <avalonia:MaterialIconStyles />

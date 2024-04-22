@@ -3,7 +3,7 @@ using FastReport.Designer.ViewModels;
 
 namespace FastReport.Designer.Views;
 
-public partial class PluginManagerDialogView : MvvmUserControl<PluginManagerDialogViewModel>
+public partial class PluginManagerDialogView : MvvmWindow<PluginManagerDialogViewModel>
 {
     public PluginManagerDialogView()
     {

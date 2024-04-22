@@ -24,6 +24,9 @@ class Program
             .UserSplash<AppSplashView, AppSplashViewModel>();
 
         builder.Services.AddTransient<FrPluginManager>();
+        
+        // Registrando View/ViewModel
+        builder.Services.AddViewTransient<PluginManagerDialogView, PluginManagerDialogViewModel>();
             
         var app = builder.Build();
         app.Run();

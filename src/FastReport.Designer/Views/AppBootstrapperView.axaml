@@ -19,7 +19,7 @@
     </Design.DataContext>
     
     <DockPanel>
-        <actipro:ChromedTitleBar DockPanel.Dock="Top"  >
+        <actipro:ChromedTitleBar DockPanel.Dock="Top">
             <actipro:ChromedTitleBar.Resources>
                 <actipro:ComparisonConverter x:Key="RightContentMarginConverter">
                     <actipro:ComparisonConverter.TrueResult>
@@ -48,6 +48,7 @@
             <actipro:ChromedTitleBar.RightContent>
                 <StackPanel Margin="{Binding $parent[actipro:ChromedTitleBar].HasCaptionButtons, Converter={StaticResource RightContentMarginConverter}}" Orientation="Horizontal">
                     <Button ToolTip.Tip="Plugin Manager"
+                            Command="{Binding PluginManagerCommand}"
                             Content="{avalonia:MaterialIconExt Kind=Plugin}"
                             Theme="{actipro:ControlTheme TitleBarButton}"/>
                 </StackPanel>
