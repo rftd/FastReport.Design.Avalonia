@@ -4,6 +4,10 @@
     <option name="projectPerEditor">
       <map>
         <entry key="FastReport.Designer/App.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/Controls/DefaultCaption.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/Controls/DefaultCaptionBar.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/Controls/DefaultCaptionControl.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/DefaultCaptionBar.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="FastReport.Designer/MainWindow.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="FastReport.Designer/Views/AppBootstrapperView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="FastReport.Designer/Views/AppSplashView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />

@@ -35,8 +35,8 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
             DesignerControl.SaveConfig();
             DesignerControl.StopAutoSave();
         });
-
-        this.GetObservable(ClientSizeProperty).Subscribe(_ =>
+        
+        ClientSizeProperty.Changed.Subscribe(_ =>
         {
             ContentArea.BorderThickness = WindowState == WindowState.Maximized ? 
                 new Thickness(8,0,8,8) : new Thickness(0);

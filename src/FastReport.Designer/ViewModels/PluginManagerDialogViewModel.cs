@@ -14,11 +14,12 @@ using ReactiveUI;
 
 namespace FastReport.Designer.ViewModels;
 
-public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOptions, Unit>
+public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOptions, bool>
 {
     #region Fields
 
     private readonly FrPluginManager manager;
+    private bool hasInstallUninstall;
 
     #endregion Fields
 
@@ -31,7 +32,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         var isBusy = this.WhenAnyValue(x => x.IsBusy, x => x == false);
         
         ReloadPluginsCommand = ReactiveCommand.CreateFromTask(LoadPluginsAsync, isBusy);
-        CloseDialogCommand = ReactiveCommand.Create(() => SetResult(Unit.Default), isBusy);
+        CloseDialogCommand = ReactiveCommand.Create(OnClose, isBusy);
         
         var canInstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToInstall.Count, (x, y) => x == false && y > 0);
         var canUninstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToUninstall.Count, (x, y) => x == false && y > 0);
@@ -69,6 +70,11 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         await LoadPluginsAsync();
     }
 
+    private void OnClose()
+    {
+        SetResult(hasInstallUninstall);
+    }
+    
     private async Task LoadPluginsAsync()
     {
         IsBusy = true;
@@ -78,8 +84,8 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
             await manager.LoadPluginsAsync();
         
             AvailablePlugins.Clear();
-            ExtensionMethods.AddRange(AvailablePlugins, manager.AvailablePlugins.Except(manager.InstaledPLugins));
-            ExtensionMethods.AddRange(InstaledPLugins, manager.InstaledPLugins);
+            AvailablePlugins.AddRange(manager.AvailablePlugins.Except(manager.InstaledPLugins));
+            InstaledPLugins.AddRange(manager.InstaledPLugins);
         }
         finally
         {
@@ -99,6 +105,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
             InstaledPLugins.AddRange(PluginsToInstall);
             AvailablePlugins.RemoveMany(PluginsToInstall);
             PluginsToInstall.Clear();
+            hasInstallUninstall = true;
         }
         finally
         {
@@ -118,6 +125,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
             InstaledPLugins.RemoveMany(PluginsToUninstall);
             AvailablePlugins.AddRange(PluginsToUninstall);
             PluginsToUninstall.Clear();
+            hasInstallUninstall = true;
         }
         finally
         {

@@ -1,0 +1,22 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FastReport.Designer.Controls.DefaultCaption">
+    
+    <StackPanel Orientation="Horizontal">
+        <Image Margin="15, 0, 0, 0" x:Name="ViewImage" DockPanel.Dock="Left" Width="24" Height="24" 
+               Source="/Assets/Designer.ico" VerticalAlignment="Center" IsHitTestVisible="False">
+            <Image.Effect>
+                <DropShadowEffect OffsetX="0" OffsetY="1" BlurRadius="3" Opacity="{DynamicResource {actipro:ThemeResourceKey ShadowOpacity}}" />
+            </Image.Effect>
+        </Image>
+
+        <StackPanel Margin="10,7,0,7" VerticalAlignment="Center" IsHitTestVisible="False">
+            <TextBlock Text="Fast Report" FontSize="12" TextTrimming="CharacterEllipsis" Opacity="0.85" />
+            <TextBlock Margin="0,-2,0,0" Name="CaptionHeader" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

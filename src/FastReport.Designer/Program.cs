@@ -23,6 +23,7 @@ class Program
         builder.UseAvalonia<App, AppBootstrapperViewModel, AppBootstrapperView>()
             .UserSplash<AppSplashView, AppSplashViewModel>();
 
+        // Registrando serviços
         builder.Services.AddTransient<FrPluginManager>();
         
         // Registrando View/ViewModel

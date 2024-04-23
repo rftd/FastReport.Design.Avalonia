@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 using FastReport.Utils;
@@ -103,7 +104,7 @@ public sealed class FrPluginManager : IDisposable
             
             availablePlugins.Add(new FrPlugin(
                 id: metadata.Identity.Id,
-                version: metadata.Identity.Version.ToString(),
+                version: version.ToString(),
                 name: metadata.Title,
                 description: metadata.Description));
         }
@@ -314,19 +315,6 @@ public sealed class FrPluginManager : IDisposable
         }
 
         return Repository.Factory.GetCoreV3(source);
-    }
-
-    private static void ClearFolder(string folderName)
-    {
-        var dir = new DirectoryInfo(folderName);
-        foreach (var di in dir.GetDirectories())
-        {
-            ClearFolder(di.FullName);
-            foreach (var file in di.GetFiles())
-                File.Delete(file.FullName);
-            
-            di.Delete();
-        }
     }
     
     private void Dispose(bool disposing)

@@ -1,4 +1,4 @@
-<controls:MvvmWindow x:TypeArguments="vm:AppBootstrapperViewModel" 
+<mvvm:MvvmWindow x:TypeArguments="vm:AppBootstrapperViewModel" 
                  xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,8 +7,9 @@
                  xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                  xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
                  xmlns:rui="http://reactiveui.net"
-                 xmlns:controls="https://github.com/rftd/Caramelo.MvvmApp"
+                 xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                  xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                 xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                  x:Class="FastReport.Designer.Views.AppBootstrapperView" WindowState="Maximized"
                  Icon="/Assets/Designer.ico" CornerRadius="10"
@@ -31,19 +32,7 @@
                 </actipro:ComparisonConverter>
             </actipro:ChromedTitleBar.Resources>
             <actipro:ChromedTitleBar.LeftContent>
-                <StackPanel Orientation="Horizontal">
-                    <Image Margin="15, 0, 0, 0" x:Name="ViewImage" DockPanel.Dock="Left" Width="24" Height="24" 
-                           Source="/Assets/Designer.ico" VerticalAlignment="Center" IsHitTestVisible="False">
-                        <Image.Effect>
-                            <DropShadowEffect OffsetX="0" OffsetY="1" BlurRadius="3" Opacity="{DynamicResource {actipro:ThemeResourceKey ShadowOpacity}}" />
-                        </Image.Effect>
-                    </Image>
-
-                    <StackPanel Margin="10,7,0,7" VerticalAlignment="Center" IsHitTestVisible="False">
-                        <TextBlock Text="Fast Report" FontSize="12" TextTrimming="CharacterEllipsis" Opacity="0.85" />
-                        <TextBlock Margin="0,-2,0,0" Text="Avalonia Designer" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
-                </StackPanel>
+                <controls:DefaultCaption Text="Avalonia Designer"/>
             </actipro:ChromedTitleBar.LeftContent>
             <actipro:ChromedTitleBar.RightContent>
                 <StackPanel Margin="{Binding $parent[actipro:ChromedTitleBar].HasCaptionButtons, Converter={StaticResource RightContentMarginConverter}}" Orientation="Horizontal">
@@ -66,4 +55,4 @@
             </rui:RoutedViewHost>
         </Border>
     </DockPanel>
-</controls:MvvmWindow>
+</mvvm:MvvmWindow>

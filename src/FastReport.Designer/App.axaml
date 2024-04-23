@@ -1,11 +1,11 @@
 <mvvm:MvvmApplication x:TypeArguments="viewModels:AppBootstrapperViewModel" 
+                      x:Class="FastReport.Designer.App"
                       xmlns="https://github.com/avaloniaui"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                       xmlns:viewModels="clr-namespace:FastReport.Designer.ViewModels"
                       xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                       xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
-                      x:Class="FastReport.Designer.App"
                       RequestedThemeVariant="Light">
     <Application.Resources>
         <ResourceDictionary>
