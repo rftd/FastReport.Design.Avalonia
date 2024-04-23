@@ -7,6 +7,13 @@
                       xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                       x:Class="FastReport.Designer.App"
                       RequestedThemeVariant="Light">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://LoadingIndicators.Avalonia/LoadingIndicators.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
     <Application.Styles>
         <actipro:ModernTheme />
         <avalonia:MaterialIconStyles />

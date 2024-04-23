@@ -9,6 +9,7 @@
                       xmlns:plugin="clr-namespace:FastReport.Designer.Services"
                       xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                       xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                      xmlns:c="using:LoadingIndicators.Avalonia"
                       mc:Ignorable="d" Width="900" Height="600" CanResize="False">
     
     <Design.DataContext>
@@ -49,45 +50,51 @@
                 </StackPanel>
             </actipro:ChromedTitleBar.RightContent>
         </actipro:ChromedTitleBar>
-        <Grid RowDefinitions="*,60" ColumnDefinitions="*, *">
-            <DockPanel Grid.Row="0" Grid.Column="0" Margin="20,20,10,0">
-                <TextBlock Margin="0 5" DockPanel.Dock="Top" FontWeight="Bold">Plugins Disponíveis</TextBlock>
-                <ListBox SelectionMode="Multiple, Toggle" BorderThickness="1"
-                         IsEnabled="{Binding !IsBusy}"
-                         ItemsSource="{Binding  AvailablePlugins}" 
-                         SelectedItems="{Binding PluginsToInstall}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type plugin:FrPlugin}">
-                            <DockPanel LastChildFill="True" Width="350">
-                                <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </DockPanel>
-            <StackPanel Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Right">
-                <Button Width="80" Command="{Binding InstallCommand}" Content="Install"/>
-            </StackPanel>
-            <DockPanel Grid.Row="0" Grid.Column="1" Margin="10,20,20,0">
-                <TextBlock Margin="0 5" DockPanel.Dock="Top" FontWeight="Bold">Plugins Instalados</TextBlock>
-                <ListBox SelectionMode="Multiple, Toggle" BorderThickness="1"
-                         IsEnabled="{Binding !IsBusy}"
-                         ItemsSource="{Binding  InstaledPLugins}"
-                         SelectedItems="{Binding PluginsToUninstall}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type plugin:FrPlugin}">
-                            <DockPanel LastChildFill="True" Width="350">
-                                <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </DockPanel>
-            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,10,20,10" HorizontalAlignment="Right">
-                <Button Width="80" Command="{Binding UninstallCommand}" Content="Uninstall"/>
-            </StackPanel>
+        
+        <Grid RowDefinitions="*" ColumnDefinitions="*">
+            <c:LoadingIndicator Grid.Row="0" Grid.Column="0" IsVisible="{Binding IsBusy}" IsActive="{Binding IsBusy}"
+                                Mode="ThreeDots" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        
+            <Grid Grid.Row="0" Grid.Column="0" IsVisible="{Binding !IsBusy}" RowDefinitions="*,60" ColumnDefinitions="*, *">
+                <DockPanel Grid.Row="0" Grid.Column="0" Margin="20,20,10,0">
+                    <TextBlock Margin="0 5" DockPanel.Dock="Top" FontWeight="Bold">Plugins Disponíveis</TextBlock>
+                    <ListBox SelectionMode="Multiple, Toggle" BorderThickness="1"
+                             IsEnabled="{Binding !IsBusy}"
+                             ItemsSource="{Binding  AvailablePlugins}" 
+                             SelectedItems="{Binding PluginsToInstall}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type plugin:FrPlugin}">
+                                <DockPanel LastChildFill="True" Width="350">
+                                    <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Right">
+                    <Button Width="80" Command="{Binding InstallCommand}" Content="Install"/>
+                </StackPanel>
+                <DockPanel Grid.Row="0" Grid.Column="1" Margin="10,20,20,0">
+                    <TextBlock Margin="0 5" DockPanel.Dock="Top" FontWeight="Bold">Plugins Instalados</TextBlock>
+                    <ListBox SelectionMode="Multiple, Toggle" BorderThickness="1"
+                             IsEnabled="{Binding !IsBusy}"
+                             ItemsSource="{Binding  InstaledPLugins}"
+                             SelectedItems="{Binding PluginsToUninstall}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type plugin:FrPlugin}">
+                                <DockPanel LastChildFill="True" Width="350">
+                                    <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,10,20,10" HorizontalAlignment="Right">
+                    <Button Width="80" Command="{Binding UninstallCommand}" Content="Uninstall"/>
+                </StackPanel>
+            </Grid>
         </Grid>
     </DockPanel>
 </mvvm:MvvmWindow>

@@ -17,7 +17,7 @@ public class AppSplashViewModel : MvvmSplashViewModel
 
     public AppSplashViewModel(IServiceProvider service) : base(service)
     {
-        Message = "Iniciado o Designer";
+        message = "Iniciado o Designer";
     }
 
     #endregion Constructors

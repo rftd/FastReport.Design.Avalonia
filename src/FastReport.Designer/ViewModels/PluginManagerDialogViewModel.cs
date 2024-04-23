@@ -70,12 +70,20 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
 
     private async Task LoadPluginsAsync()
     {
-        await manager.LoadPluginsAsync();
+        IsBusy = true;
+
+        try
+        {
+            await manager.LoadPluginsAsync();
         
-        AvailablePlugins.Clear();
-        ExtensionMethods.AddRange(AvailablePlugins, manager.AvailablePlugins.Except(manager.InstaledPLugins));
-        
-        ExtensionMethods.AddRange(InstaledPLugins, manager.InstaledPLugins);
+            AvailablePlugins.Clear();
+            ExtensionMethods.AddRange(AvailablePlugins, manager.AvailablePlugins.Except(manager.InstaledPLugins));
+            ExtensionMethods.AddRange(InstaledPLugins, manager.InstaledPLugins);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async Task InstallPluginsAsync()
