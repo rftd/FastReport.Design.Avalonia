@@ -52,8 +52,11 @@
         </actipro:ChromedTitleBar>
         
         <Grid RowDefinitions="*" ColumnDefinitions="*">
-            <c:LoadingIndicator Grid.Row="0" Grid.Column="0" IsVisible="{Binding IsBusy}" IsActive="{Binding IsBusy}"
-                                Mode="ThreeDots" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" IsVisible="{Binding IsBusy}">
+                <c:LoadingIndicator IsActive="{Binding IsBusy}"
+                                     Mode="ThreeDots" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Text="Por favor Aguarde..." FontWeight="Bold" TextAlignment="Center"/>
+            </StackPanel>
         
             <Grid Grid.Row="0" Grid.Column="0" IsVisible="{Binding !IsBusy}" RowDefinitions="*,60" ColumnDefinitions="*, *">
                 <DockPanel Grid.Row="0" Grid.Column="0" Margin="20,20,10,0">

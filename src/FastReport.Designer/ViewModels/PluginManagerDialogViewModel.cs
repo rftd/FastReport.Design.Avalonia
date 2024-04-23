@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AvaloniaEdit.Utils;
 using Caramelo.MvvmApp.Dialogs;
@@ -32,8 +33,8 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         ReloadPluginsCommand = ReactiveCommand.CreateFromTask(LoadPluginsAsync, isBusy);
         CloseDialogCommand = ReactiveCommand.Create(() => SetResult(Unit.Default), isBusy);
         
-        var canInstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToInstall, (x, y) => x == false && y.Any());
-        var canUninstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToUninstall, (x, y) => x == false && y.Any());
+        var canInstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToInstall.Count, (x, y) => x == false && y > 0);
+        var canUninstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToUninstall.Count, (x, y) => x == false && y > 0);
         
         InstallCommand = ReactiveCommand.CreateFromTask(InstallPluginsAsync, canInstall);
         UninstallCommand = ReactiveCommand.CreateFromTask(UninstallPluginsAsync, canUninstall);
