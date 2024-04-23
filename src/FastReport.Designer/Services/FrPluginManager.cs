@@ -144,7 +144,7 @@ public sealed class FrPluginManager : IDisposable
         var plugins = Config.Root.FindItem("Plugins");
         var pluginElement = plugins.Add();
         pluginElement.Name = "Plugin";
-        pluginElement.SetProp("Name", Path.Combine(PluginDirectory, $"{plugin.Id}.dll"));
+        pluginElement.SetProp("Name", Path.Combine(pluginPath, $"{plugin.Id}.dll"));
         pluginElement.SetProp("Id", plugin.Id);
         pluginElement.SetProp("Version", plugin.Version);
         
