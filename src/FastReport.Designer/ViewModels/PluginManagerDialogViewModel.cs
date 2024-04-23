@@ -96,6 +96,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
             foreach (var plugin in PluginsToInstall)
                 await manager.InstallAsync(plugin);
         
+            InstaledPLugins.AddRange(PluginsToInstall);
             AvailablePlugins.RemoveMany(PluginsToInstall);
             PluginsToInstall.Clear();
         }
@@ -115,6 +116,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
                 await manager.UninstallAsync(plugin);
         
             InstaledPLugins.RemoveMany(PluginsToUninstall);
+            AvailablePlugins.AddRange(PluginsToUninstall);
             PluginsToUninstall.Clear();
         }
         finally
