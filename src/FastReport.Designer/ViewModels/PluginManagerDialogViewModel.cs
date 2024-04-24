@@ -2,9 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using AvaloniaEdit.Utils;
 using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
 using DynamicData;
@@ -53,13 +51,13 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
     
     public ReactiveCommand<Unit, Unit> ReloadPluginsCommand { get; }
 
-    public ObservableCollection<FrPlugin> AvailablePlugins { get; } = new();
+    public ObservableCollection<FrPlugin> AvailablePlugins { get; } = [];
     
-    public ObservableCollection<FrPlugin> PluginsToInstall { get; } = new();
+    public ObservableCollection<FrPlugin> PluginsToInstall { get; } = [];
     
-    public ObservableCollection<FrPlugin> InstaledPLugins { get; } = new();
+    public ObservableCollection<FrPlugin> InstaledPLugins { get; } = [];
     
-    public ObservableCollection<FrPlugin> PluginsToUninstall { get; } = new();
+    public ObservableCollection<FrPlugin> PluginsToUninstall { get; } = [];
 
     #endregion Properties
 

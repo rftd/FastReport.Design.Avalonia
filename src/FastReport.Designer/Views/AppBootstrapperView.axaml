@@ -50,7 +50,12 @@
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Stretch">
                 <rui:RoutedViewHost.DefaultContent>
-                    <fr:AvaloniaDesignerControl Name="DesignerControl" />
+                    <DockPanel LastChildFill="True">
+                        <Menu DockPanel.Dock="Top">
+                            
+                        </Menu>
+                        <fr:AvaloniaDesignerControl Name="DesignerControl" />
+                    </DockPanel>
                 </rui:RoutedViewHost.DefaultContent>
             </rui:RoutedViewHost>
         </Border>

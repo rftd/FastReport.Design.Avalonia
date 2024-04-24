@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
 using ReactiveUI;
@@ -11,6 +14,7 @@ public class AppBootstrapperViewModel : RouterViewModel
     #region Fields
 
     private Report report;
+    private readonly Subject<string[]> restartApp;
 
     #endregion Fields
 
@@ -28,8 +32,10 @@ public class AppBootstrapperViewModel : RouterViewModel
             resp = await Dialogs.ConfirmAsync("Fast Report Design", mensagem);
             if(resp == false) return;
             
-            FinishApp();
+            RestartApp();
         });
+        
+        restartApp = new Subject<string[]>();
         
         var args = Environment.GetCommandLineArgs();
         if(args.Length < 2) return;
@@ -53,8 +59,24 @@ public class AppBootstrapperViewModel : RouterViewModel
         get => report;
         set => this.RaiseAndSetIfChanged(ref report, value);
     }
+    
+    public IObservable<string[]> OnRestartApp => restartApp.AsObservable();
 
     public ReactiveCommand<Unit, Unit> PluginManagerCommand { get; }
 
     #endregion Properties
+
+    #region Methods
+
+    private void RestartApp()
+    {
+        var args = Environment.GetCommandLineArgs().ToList();
+        args.RemoveAt(0);
+        
+        restartApp.OnNext(args.ToArray());
+        restartApp.OnCompleted();
+        restartApp.Dispose();
+    }
+
+    #endregion Methods
 }

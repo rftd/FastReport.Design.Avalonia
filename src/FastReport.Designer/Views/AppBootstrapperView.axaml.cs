@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using AvaloniaEdit.Utils;
 using Caramelo.MvvmApp.Avalonia.Controls;
+using FastReport.Designer.Extensions;
 using FastReport.Designer.ViewModels;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
@@ -19,12 +20,23 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
         {
             this.Bind(ViewModel, viewModel => viewModel.Report, view => view.DesignerControl.Report)
                 .DisposeWith(disposables);
+
+            ViewModel.OnRestartApp.Subscribe(x =>
+            {
+                if(Application.Current == null)
+                    return;
+                
+                ((App)Application.Current).DesktopApp.Restart(x);
+            });
         });
 
         this.Events().Loaded.Subscribe(_ =>
         {
             DesignerControl.RestoreConfig();
             DesignerControl.StartAutoSave();
+
+            var welcome = new WelcomDialogView();
+            welcome.ShowDialog(this);
         });
         
         this.Events().Closing.Subscribe(e =>
