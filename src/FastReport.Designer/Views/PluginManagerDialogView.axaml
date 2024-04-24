@@ -8,9 +8,8 @@
                       xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
                       xmlns:plugin="clr-namespace:FastReport.Designer.Services"
                       xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
-                      xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-                      xmlns:c="using:LoadingIndicators.Avalonia"
                       xmlns:controls="clr-namespace:FastReport.Designer.Controls"
+                      xmlns:c="clr-namespace:LoadingIndicators.Avalonia;assembly=LoadingIndicators.Avalonia"
                       mc:Ignorable="d" Width="900" Height="600" CanResize="False">
     
     <Design.DataContext>
