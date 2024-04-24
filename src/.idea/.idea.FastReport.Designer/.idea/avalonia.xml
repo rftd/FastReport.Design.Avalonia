@@ -14,6 +14,7 @@
         <entry key="FastReport.Designer/Views/MainWindow.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="FastReport.Designer/Views/PluginManagerDialogView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="FastReport.Designer/Views/SplashScreen.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
+        <entry key="FastReport.Designer/Views/WelcomDialogView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="ReactiveUI.Mvvm.Avalonia/Dialogs/ConfirmDialogView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="ReactiveUI.Mvvm.Avalonia/Dialogs/InputDialogView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />
         <entry key="ReactiveUI.Mvvm.Avalonia/Dialogs/MessageDialogView.axaml" value="FastReport.Designer/FastReport.Designer.csproj" />

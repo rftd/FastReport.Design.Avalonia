@@ -7,6 +7,7 @@ using FastReport.Designer.Extensions;
 using FastReport.Designer.ViewModels;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
+using Application = Avalonia.Application;
 
 namespace FastReport.Designer.Views;
 
@@ -29,14 +30,21 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
                 ((App)Application.Current).DesktopApp.Restart(x);
             });
         });
+        
+        // ConfigurarBandas.Click += (_, _) =>
+        // {
+        //     DesignerControl.InnerDesigner.MainMenu.miReport.DropDownItems[8].PerformClick();
+        // };
+        //
+        // AssistenteGrupos.Click += (_, _) =>
+        // {
+        //     DesignerControl.InnerDesigner.MainMenu.miReport.DropDownItems[9].PerformClick();
+        // };
 
         this.Events().Loaded.Subscribe(_ =>
         {
             DesignerControl.RestoreConfig();
             DesignerControl.StartAutoSave();
-
-            var welcome = new WelcomDialogView();
-            welcome.ShowDialog(this);
         });
         
         this.Events().Closing.Subscribe(e =>

@@ -4,34 +4,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
     mc:Ignorable="d" d:DesignWidth="684" d:DesignHeight="466"
-    WindowStartupLocation="CenterOwner" Width="684" Height="466" 
+    WindowStartupLocation="CenterOwner" Width="684" Height="466"
     Title="Welcome to FastReport Avalonia">
     
-    <Grid RowDefinitions="105, *, 30" ColumnDefinitions="342, 342">
-        <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-               Source="../Assets/Welcome.png"/>
-        <StackPanel Margin="50, 20, 10, 10" Grid.Row="1" Grid.Column="0">
-            <TextBlock Text="Abrir Recentes" FontWeight="Bold" FontSize="16"/>
-            <ListBox HorizontalAlignment="Stretch" BorderThickness="0">
-                <ListBoxItem Height="30">
-                    <StackPanel Orientation="Horizontal">
-                        <avalonia:MaterialIcon Kind="FolderOpen" />
-                        <TextBlock Text="Abrir..." />
-                    </StackPanel>
-                </ListBoxItem>
-            </ListBox>
-        </StackPanel>
-        <StackPanel Margin="50, 20, 10, 10" Grid.Row="1" Grid.Column="1">
-            <TextBlock Text="Criar novo" FontWeight="Bold" FontSize="16"/>
-            <ListBox HorizontalAlignment="Stretch" BorderThickness="0">
-                <ListBoxItem Height="30">
-                    <StackPanel Orientation="Horizontal">
-                        <avalonia:MaterialIcon Kind="NewReleases" />
-                        <TextBlock Text="Relátorio em branco" />
-                    </StackPanel>
-                </ListBoxItem>
-            </ListBox>
-        </StackPanel>
-    </Grid>
+    <DockPanel LastChildFill="True">
+        <actipro:ChromedTitleBar DockPanel.Dock="Top"
+                                 IsMaximizeButtonAllowed="False"
+                                 IsMinimizeButtonAllowed="False"
+                                 >
+            <actipro:ChromedTitleBar.LeftContent>
+                <TextBlock Margin="10,7,0,7" Text="Bem vindo ao Fast Report" FontSize="12" 
+                           TextTrimming="CharacterEllipsis" FontWeight="Bold" />
+            </actipro:ChromedTitleBar.LeftContent>
+        </actipro:ChromedTitleBar>
+        <Grid RowDefinitions="105, *, 30" ColumnDefinitions="342, 342">
+            <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Source="../Assets/Welcome.png"/>
+            <StackPanel Margin="50, 20, 10, 10" Grid.Row="1" Grid.Column="0">
+                <TextBlock Text="Abrir Recentes" FontWeight="Bold" FontSize="16"/>
+                <ListBox HorizontalAlignment="Stretch" BorderThickness="0">
+                    <ListBoxItem Height="30">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="FolderOpen" />
+                            <TextBlock Text="Abrir..." />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+            </StackPanel>
+            <StackPanel Margin="50, 20, 10, 10" Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Criar novo" FontWeight="Bold" FontSize="16"/>
+                <ListBox HorizontalAlignment="Stretch" BorderThickness="0">
+                    <ListBoxItem Height="30">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="NewReleases" />
+                            <TextBlock Text="Relátorio em branco" />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
 </Window>
