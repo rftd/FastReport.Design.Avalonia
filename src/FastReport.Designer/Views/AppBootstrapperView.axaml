@@ -51,138 +51,181 @@
                                 VerticalContentAlignment="Stretch">
                 <rui:RoutedViewHost.DefaultContent>
                     <DockPanel LastChildFill="True">
-                        <!-- <Menu DockPanel.Dock="Top"> -->
-                        <!--     <MenuItem Header="Arquivo"> -->
-                        <!--         <MenuItem Header="Novo..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FileDocument}" -->
-                        <!--                   Command="{Binding cmdNew, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Abrir..." HotKey="Ctrl+O" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FolderOpen}" -->
-                        <!--                   Command="{Binding cmdOpen, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Abrir Pagina..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FileDownload}" -->
-                        <!--                   Command="{Binding cmdOpenPage, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Abrir da Nuvem..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=CloudDownload}" -->
-                        <!--                   Command="{Binding cmdOpenViaCloud, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Arquivos Recentes" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=History}" -->
-                        <!--                   Command="{Binding cmdRecentFiles, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Salvar" HotKey="Ctrl+S" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=ContentSave}" -->
-                        <!--                   Command="{Binding cmdSave, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Salvar como..." HotKey="Ctrl+Alt+S" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=ContentSaveEdit}" -->
-                        <!--                   Command="{Binding cmdSaveAs, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Salvar na Nuvem..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=CloudUpload}" -->
-                        <!--                   Command="{Binding cmdSaveToCloud, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Salvar com dados..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=ContentSavePlus}" -->
-                        <!--                   Command="{Binding cmdSaveWithRandomData, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Configuração da Página..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FileCog}" -->
-                        <!--                   Command="{Binding cmdPageSetup, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Configuração da Impressora..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=PrinterSettings}" -->
-                        <!--                   Command="{Binding cmdPrinterSetup, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Pré-Visualizar..." HotKey="Ctrl+P" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=PrinterEye}" -->
-                        <!--                   Command="{Binding cmdPreview, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Selecionar Idioma" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=TranslateVariant}" -->
-                        <!--                   Command="{Binding cmdSelectLanguage, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Sair" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Close}" -->
-                        <!--                   Command="{Binding FinishAppCommand}"/> -->
-                        <!--     </MenuItem> -->
-                        <!--     <MenuItem Header="Editar"> -->
-                        <!--         <MenuItem Header="Desfazer" HotKey="Ctrl+Z" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Undo}" -->
-                        <!--                   Command="{Binding cmdUndo, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Refazer" HotKey="Ctrl+Y" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Redo}" -->
-                        <!--                   Command="{Binding cmdRedo, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Recortar" HotKey="Ctrl+X" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=ContentCut}" -->
-                        <!--                   Command="{Binding cmdCut, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Copiar" HotKey="Ctrl+C" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=ContentCopy}" -->
-                        <!--                   Command="{Binding cmdCopy, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Colar" HotKey="Ctrl+V" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=ContentPaste}" -->
-                        <!--                   Command="{Binding cmdPaste, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Apagar" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Delete}" -->
-                        <!--                   Command="{Binding cmdDelete, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Nova Página" HotKey="Ctrl+N" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FileDocumentAdd}" -->
-                        <!--                   Command="{Binding cmdNewPage, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Copiar Página" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FileDocumentMultiple}" -->
-                        <!--                   Command="{Binding cmdCopyPage, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Apagar Página" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FileDocumentDelete}" -->
-                        <!--                   Command="{Binding cmdDeletePage, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Selecionar tudo" HotKey="Ctrl+A" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=SelectAll}" -->
-                        <!--                   Command="{Binding cmdSelectAll, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Agrupar" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Group}" -->
-                        <!--                   Command="{Binding cmdGroup, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Desagrupar" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Ungroup}" -->
-                        <!--                   Command="{Binding cmdUngroup, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Localizar..." HotKey="Ctrl+F" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FindInPage}" -->
-                        <!--                   Command="{Binding cmdFind, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Substituir.." HotKey="Ctrl+H" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FindReplace}" -->
-                        <!--                   Command="{Binding cmdReplace, ElementName=DesignerControl}"/> -->
-                        <!--     </MenuItem> -->
-                        <!--     <MenuItem Header="Visualizar"></MenuItem> -->
-                        <!--     <MenuItem Header="Inserir"></MenuItem> -->
-                        <!--     <MenuItem Header="Relatório"> -->
-                        <!--         <MenuItem Header="Configurar Bandas..." Name="ConfigurarBandas" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FormatListBulleted}"/> -->
-                        <!--         <MenuItem Header="Assistente de Grupos..." Name="AssistenteGrupos" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=FormatListGroupPlus}"/> -->
-                        <!--         <MenuItem Header="Estilos..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Style}" -->
-                        <!--                   Command="{Binding cmdReportStyles, ElementName=DesignerControl}"/> -->
-                        <!--     </MenuItem> -->
-                        <!--     <MenuItem Header="Dados"> -->
-                        <!--         <MenuItem Header="Escolher Dados do Relatório" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=DatabaseSettings}" -->
-                        <!--                   Command="{Binding cmdChooseData, ElementName=DesignerControl}"/> -->
-                        <!--         <MenuItem Header="Adicionar fonte de dados" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=DatabaseAdd}" -->
-                        <!--                   Command="{Binding cmdAddData, ElementName=DesignerControl}"/> -->
-                        <!--     </MenuItem> -->
-                        <!--     <MenuItem Header="Ajuda"> -->
-                        <!--         <MenuItem Header="Conteúdo de Ajuda..." HotKey="F1" -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=HelpCircle}" -->
-                        <!--                   Command="{Binding cmdHelpContents, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Conta..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=Account}" -->
-                        <!--                   Command="{Binding cmdAccount, ElementName=DesignerControl}"/> -->
-                        <!--         <Separator/> -->
-                        <!--         <MenuItem Header="Sobre..." -->
-                        <!--                   Icon="{avalonia:MaterialIconExt Kind=About}" -->
-                        <!--                   Command="{Binding cmdAbout, ElementName=DesignerControl}"/> -->
-                        <!--     </MenuItem> -->
-                        <!-- </Menu> -->
+                        <Menu DockPanel.Dock="Top">
+                            <MenuItem Header="Arquivo">
+                                <MenuItem Header="Novo..."
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDocument}"
+                                          Command="{Binding cmdNew, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Abrir..." HotKey="Ctrl+O"
+                                          Icon="{avalonia:MaterialIconExt Kind=FolderOpen}"
+                                          Command="{Binding cmdOpen, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Abrir Pagina..."
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDownload}"
+                                          Command="{Binding cmdOpenPage, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Abrir da Nuvem..."
+                                          Icon="{avalonia:MaterialIconExt Kind=CloudDownload}"
+                                          Command="{Binding cmdOpenViaCloud, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Arquivos Recentes"
+                                          Icon="{avalonia:MaterialIconExt Kind=History}"
+                                          Command="{Binding cmdRecentFiles, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Salvar" HotKey="Ctrl+S"
+                                          Icon="{avalonia:MaterialIconExt Kind=ContentSave}"
+                                          Command="{Binding cmdSave, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Salvar como..." HotKey="Ctrl+Alt+S"
+                                          Icon="{avalonia:MaterialIconExt Kind=ContentSaveEdit}"
+                                          Command="{Binding cmdSaveAs, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Salvar na Nuvem..."
+                                          Icon="{avalonia:MaterialIconExt Kind=CloudUpload}"
+                                          Command="{Binding cmdSaveToCloud, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Salvar com dados..."
+                                          Icon="{avalonia:MaterialIconExt Kind=ContentSavePlus}"
+                                          Command="{Binding cmdSaveWithRandomData, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Configuração da Página..."
+                                          Icon="{avalonia:MaterialIconExt Kind=FileCog}"
+                                          Command="{Binding cmdPageSetup, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Configuração da Impressora..."
+                                          Icon="{avalonia:MaterialIconExt Kind=PrinterSettings}"
+                                          Command="{Binding cmdPrinterSetup, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Pré-Visualizar..." HotKey="Ctrl+P"
+                                          Icon="{avalonia:MaterialIconExt Kind=PrinterEye}"
+                                          Command="{Binding cmdPreview, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Selecionar Idioma"
+                                          Icon="{avalonia:MaterialIconExt Kind=TranslateVariant}"
+                                          Command="{Binding cmdSelectLanguage, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Sair"
+                                          Icon="{avalonia:MaterialIconExt Kind=Close}"
+                                          Command="{Binding FinishAppCommand}"/>
+                            </MenuItem>
+                            <MenuItem Header="Editar">
+                                <MenuItem Header="Desfazer" HotKey="Ctrl+Z"
+                                          Icon="{avalonia:MaterialIconExt Kind=Undo}"
+                                          Command="{Binding cmdUndo, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Refazer" HotKey="Ctrl+Y"
+                                          Icon="{avalonia:MaterialIconExt Kind=Redo}"
+                                          Command="{Binding cmdRedo, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Recortar" HotKey="Ctrl+X"
+                                          Icon="{avalonia:MaterialIconExt Kind=ContentCut}"
+                                          Command="{Binding cmdCut, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Copiar" HotKey="Ctrl+C"
+                                          Icon="{avalonia:MaterialIconExt Kind=ContentCopy}"
+                                          Command="{Binding cmdCopy, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Colar" HotKey="Ctrl+V"
+                                          Icon="{avalonia:MaterialIconExt Kind=ContentPaste}"
+                                          Command="{Binding cmdPaste, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Apagar"
+                                          Icon="{avalonia:MaterialIconExt Kind=Delete}"
+                                          Command="{Binding cmdDelete, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Nova Página" HotKey="Ctrl+N"
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDocumentAdd}"
+                                          Command="{Binding cmdNewPage, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Copiar Página"
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDocumentMultiple}"
+                                          Command="{Binding cmdCopyPage, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Apagar Página"
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDocumentDelete}"
+                                          Command="{Binding cmdDeletePage, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Selecionar tudo" HotKey="Ctrl+A"
+                                          Icon="{avalonia:MaterialIconExt Kind=SelectAll}"
+                                          Command="{Binding cmdSelectAll, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Agrupar"
+                                          Icon="{avalonia:MaterialIconExt Kind=Group}"
+                                          Command="{Binding cmdGroup, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Desagrupar"
+                                          Icon="{avalonia:MaterialIconExt Kind=Ungroup}"
+                                          Command="{Binding cmdUngroup, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Localizar..." HotKey="Ctrl+F"
+                                          Icon="{avalonia:MaterialIconExt Kind=FindInPage}"
+                                          Command="{Binding cmdFind, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Substituir.." HotKey="Ctrl+H"
+                                          Icon="{avalonia:MaterialIconExt Kind=FindReplace}"
+                                          Command="{Binding cmdReplace, ElementName=DesignerControl}"/>
+                            </MenuItem>
+                            <MenuItem Header="Visualizar"></MenuItem>
+                            <MenuItem Header="Inserir"></MenuItem>
+                            <MenuItem Header="Relatório">
+                                <MenuItem Header="Título do Relatório" Name="TituloRelatorio">
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkTituloRelatorio" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Sumário do Relatório" Name="SumarioRelatorio">
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkSumarioRelatorio" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Cabeçalho de Página" Name="HeaderRelatorio">
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkHeaderRelatorio" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Rodapé de Página" Name="FooterRelatorio">
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkFooterRelatorio" IsChecked="False" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Cabeçalho de Coluna" Name="HeaderColumnRelatorio" >
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkHeaderColumnRelatorio" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Rodapé de Coluna" Name="FooterColumnRelatorio">
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkFooterColumnRelatorio" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Deslocamento" Name="OverlayRelatorio">
+                                    <MenuItem.Icon>
+                                        <CheckBox Name="ChkOverlayRelatorio" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Configurar Bandas..." Name="ConfigurarBandas"
+                                          Icon="{avalonia:MaterialIconExt Kind=FormatListBulleted}"/>
+                                <MenuItem Header="Assistente de Grupos..." Name="AssistenteGrupos"
+                                          Icon="{avalonia:MaterialIconExt Kind=FormatListGroupPlus}"/>
+                                <MenuItem Header="Estilos..."
+                                          Icon="{avalonia:MaterialIconExt Kind=Style}"
+                                          Command="{Binding cmdReportStyles, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Validar Relatório"
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDocumentCheck}"
+                                          Command="{Binding cmdReportValidation, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Opções..."
+                                          Icon="{avalonia:MaterialIconExt Kind=FileDocumentEdit}"
+                                          Command="{Binding cmdReportSettings, ElementName=DesignerControl}"/>
+                            </MenuItem>
+                            <MenuItem Header="Dados">
+                                <MenuItem Header="Escolher Dados do Relatório"
+                                          Icon="{avalonia:MaterialIconExt Kind=DatabaseSettings}"
+                                          Command="{Binding cmdChooseData, ElementName=DesignerControl}"/>
+                                <MenuItem Header="Adicionar fonte de dados"
+                                          Icon="{avalonia:MaterialIconExt Kind=DatabaseAdd}"
+                                          Command="{Binding cmdAddData, ElementName=DesignerControl}"/>
+                            </MenuItem>
+                            <MenuItem Header="Ajuda">
+                                <MenuItem Header="Conteúdo de Ajuda..." HotKey="F1"
+                                          Icon="{avalonia:MaterialIconExt Kind=HelpCircle}"
+                                          Command="{Binding cmdHelpContents, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Conta..."
+                                          Icon="{avalonia:MaterialIconExt Kind=Account}"
+                                          Command="{Binding cmdAccount, ElementName=DesignerControl}"/>
+                                <Separator/>
+                                <MenuItem Header="Sobre..."
+                                          Icon="{avalonia:MaterialIconExt Kind=About}"
+                                          Command="{Binding cmdAbout, ElementName=DesignerControl}"/>
+                            </MenuItem>
+                        </Menu>
                         <fr:AvaloniaDesignerControl Name="DesignerControl" ShowMainMenu="True" />
                     </DockPanel>
                 </rui:RoutedViewHost.DefaultContent>
