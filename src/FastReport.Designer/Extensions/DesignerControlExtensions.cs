@@ -1,19 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using FastReport.Design;
 using FastReport.Designer.Commom;
+using FastReport.Utils;
 using ReactiveUI;
 
 namespace FastReport.Designer.Extensions;
 
-public static class DesignerControlExtensions
+internal static class DesignerControlExtensions
 {
-    public static FrDesignerControlHelper GetHelper(this AvaloniaDesignerControl control)
+    public static FrDesignerMenuHelper GetMenuHelper(this AvaloniaDesignerControl control)
     {
-        return new FrDesignerControlHelper(control.InnerDesigner);
+        return new FrDesignerMenuHelper(control);
     }
 
+    public static void InsertObject(this Design.Designer designer, ObjectInfo info, InsertFrom source)
+    {
+        var method = typeof(Design.Designer).GetMethod("InsertObject", 
+            BindingFlags.Instance  | BindingFlags.NonPublic, [typeof(ObjectInfo), typeof(InsertFrom)]);
+        method?.Invoke(designer, [info, source]);
+    }
+    
+    public static void LayoutToolbars(this Design.Designer designer)
+    {
+        var method = typeof(Design.Designer).GetMethod("LayoutToolbars", BindingFlags.Instance  | BindingFlags.NonPublic);
+        method?.Invoke(designer, null);
+    }
+    
+    public static IEnumerable<string> RecentFiles(this Design.Designer designer)
+    {
+        var property = typeof(Design.Designer).GetProperty("RecentFiles", BindingFlags.Instance  | BindingFlags.NonPublic);
+        var files = (List<string>?)property?.GetValue(designer);
+        if(files == null) throw new InvalidOperationException();
+        
+        return files;
+    }
+    
     public static IObservable<bool> ToCheckedObservable(this ToolStripItem item)
     {
         var itemMenu = (ToolStripMenuItem) item;
@@ -38,8 +62,12 @@ public static class DesignerControlExtensions
     
     public static void ToggleChecked(this ToolStripItem item)
     {
-        var itemMenu = (ToolStripMenuItem) item;
-        itemMenu.Checked = !itemMenu.Checked;
-        itemMenu.PerformClick();
+        ((ToolStripMenuItem?)item)?.ToggleChecked();
+    }
+    
+    public static void ToggleChecked(this ToolStripMenuItem item)
+    {
+        item.Checked = !item.Checked;
+        item.PerformClick();
     }
 }

@@ -33,30 +33,8 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
 
         this.Events().Loaded.Subscribe(_ =>
         {
-            var helper = DesignerControl.GetHelper();
-            TituloRelatorio.Command = helper.ReportTitleCommand;
-            helper.ReportTitle.Subscribe(x => ChkTituloRelatorio.IsChecked = x);
-            
-            SumarioRelatorio.Command = helper.ReportSummaryCommand;
-            helper.ReportSummary.Subscribe(x => ChkSumarioRelatorio.IsChecked = x);
-            
-            HeaderRelatorio.Command = helper.ReportHeaderCommand;
-            helper.ReportHeader.Subscribe(x => ChkHeaderRelatorio.IsChecked = x);
-            
-            FooterRelatorio.Command = helper.ReportFooterCommand;
-            helper.ReportFooter.Subscribe(x => ChkFooterRelatorio.IsChecked = x);
-            
-            HeaderColumnRelatorio.Command = helper.HeaderColumnCommand;
-            helper.HeaderColumn.Subscribe(x => ChkHeaderColumnRelatorio.IsChecked = x);
-            
-            FooterColumnRelatorio.Command = helper.FooterColumnCommand;
-            helper.FooterColumn.Subscribe(x => ChkFooterColumnRelatorio.IsChecked = x);
-            
-            OverlayRelatorio.Command = helper.OverlayColumnCommand;
-            helper.OverlayColumn.Subscribe(x => ChkOverlayRelatorio.IsChecked = x);
-            
-            ConfigurarBandas.Command = helper.ConfigurarBandasCommand;
-            AssistenteGrupos.Command = helper.AssistenteGruposCommand;
+            var helper = DesignerControl.GetMenuHelper();
+            helper.GenerateMenu(MainMenu, ViewModel);
             
             DesignerControl.RestoreConfig();
             DesignerControl.StartAutoSave();
