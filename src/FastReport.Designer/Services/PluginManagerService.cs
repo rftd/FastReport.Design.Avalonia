@@ -158,6 +158,9 @@ public sealed class PluginManagerService : IDisposable
         
         var plugins = Config.Root.FindItem("Plugins");
 
+        if (!Directory.Exists(PluginDirectory))
+            Directory.CreateDirectory(PluginDirectory);
+
         var uninstallFile = Path.Combine(PluginDirectory, "plugins.uninstall");
         XmlItem pluginsNode;
         var uninstallDoc = new XmlDocument();
