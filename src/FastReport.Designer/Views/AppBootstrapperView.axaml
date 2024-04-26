@@ -32,7 +32,15 @@
                                 VerticalContentAlignment="Stretch">
                 <rui:RoutedViewHost.DefaultContent>
                     <DockPanel LastChildFill="True">
-                        <Menu Name="MainMenu" DockPanel.Dock="Top"/>
+                        <Menu Name="MainMenu" DockPanel.Dock="Top">
+                            <MenuItem Header="Arquivo"/>
+                            <MenuItem Header="Editar"/>
+                            <MenuItem Header="Visualizar"/>
+                            <MenuItem Header="Inserir"/>
+                            <MenuItem Header="Relatório"/>
+                            <MenuItem Header="Dados"/>
+                            <MenuItem Header="Ajuda"/>
+                        </Menu>
                         <fr:AvaloniaDesignerControl Name="DesignerControl" ShowMainMenu="false" />
                     </DockPanel>
                 </rui:RoutedViewHost.DefaultContent>

@@ -91,6 +91,7 @@ internal sealed class FrDesignerMenuHelper
 
     public void GenerateMenu(Menu menu, AppBootstrapperViewModel model)
     {
+        menu.Items.Clear();
         menu.Items.Add(GenerateFileMenu(model.FinishAppCommand));
         menu.Items.Add(GenerateEditMenu());
         menu.Items.Add(GenerateViewMenu(model.PluginManagerCommand));
