@@ -479,10 +479,39 @@ internal sealed class FrDesignerMenuHelper
         var unidadeMenu = new MenuItem { Header = "Unidades" };
         menu.Items.Add(unidadeMenu);
 
+        var defaultUnit = Config.Root.FindItem("Designer").FindItem("Report").GetProp("Units");
+        var unitName = Res.TryGet($"Forms,ReportPageOptions,{defaultUnit}");
+        
         var unidadeToolbar = (ToolStripMenuItem)designer.MainMenu.miView.DropDownItems[10];
-        foreach (ToolStripItem item in unidadeToolbar.DropDownItems)
+        foreach (var item in unidadeToolbar.DropDownItems.Cast<ToolStripMenuItem>())
         {
-            unidadeMenu.Items.Add(CreateCheckedItem(item.Text, item, item.GetChecked()));
+            var checkBox = new CheckBox
+            {
+                BorderThickness = Thickness.Parse("0"),
+                IsHitTestVisible = false,
+                IsChecked = unitName == item.Text
+            };
+            var menuItem = new MenuItem
+            {
+                Header = item.Text,
+                Icon =  checkBox
+            };
+
+            menuItem.Command = ReactiveCommand.Create(() =>
+            {
+                checkBox.IsChecked = !checkBox.IsChecked;
+
+                foreach (var undMenu in unidadeMenu.Items.Cast<MenuItem>())
+                {
+                    if (undMenu == menuItem) continue;
+                    
+                    ((CheckBox)undMenu.Icon!).IsChecked = !checkBox.IsChecked;
+                }
+
+                item.PerformClick();
+            });
+
+            unidadeMenu.Items.Add(menuItem);
         }
         
         menu.Items.Add(new Separator());
