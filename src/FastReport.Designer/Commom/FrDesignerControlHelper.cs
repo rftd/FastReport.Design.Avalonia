@@ -14,6 +14,7 @@ using FastReport.Designer.ViewModels;
 using FastReport.Utils;
 using Material.Icons;
 using Material.Icons.Avalonia;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using CheckBox = Avalonia.Controls.CheckBox;
 
@@ -145,31 +146,37 @@ internal sealed class FrDesignerMenuHelper
         menu.Items.Add(new Separator());
 
         var recentFilesMenu = new MenuItem { Header = "Arquivos Recentes" };
-        var recentFiles = designer.RecentFiles();
-        foreach (var recentFile in recentFiles)
+        menu.Items.Add(recentFilesMenu);
+        
+        menu.Events().SubmenuOpened.Subscribe(_ =>
         {
-            var item =new MenuItem
+            recentFilesMenu.Items.Clear();
+            
+            var recentFiles = designer.RecentFiles();
+            foreach (var recentFile in recentFiles)
             {
-                Header = recentFile,
-                Command = ReactiveCommand.Create(() =>
+                var item =new MenuItem
                 {
-                    designer.cmdRecentFiles.LoadFile(recentFile);
-                })
-            };
-
-            if (designer.cmdRecentFiles.IsCloudFile(recentFile))
-            {
-                item.Icon = new MaterialIcon
-                {
-                    Kind = MaterialIconKind.Cloud
+                    Header = recentFile,
+                    Command = ReactiveCommand.Create(() =>
+                    {
+                        designer.cmdRecentFiles.LoadFile(recentFile);
+                    })
                 };
+
+                if (designer.cmdRecentFiles.IsCloudFile(recentFile))
+                {
+                    item.Icon = new MaterialIcon
+                    {
+                        Kind = MaterialIconKind.Cloud
+                    };
+                }
+
+                recentFilesMenu.Items.Add(item);
             }
 
-            recentFilesMenu.Items.Add(item);
-        }
-
-        recentFilesMenu.IsEnabled = recentFilesMenu.Items.Count > 0;
-        menu.Items.Add(recentFilesMenu);
+            recentFilesMenu.IsEnabled = recentFilesMenu.Items.Count > 0;
+        });
         
         menu.Items.Add(new Separator());
         
@@ -434,6 +441,8 @@ internal sealed class FrDesignerMenuHelper
         
         var mensagem = Config.Root.FindItem("Designer").FindItem("MessagesWindow").GetProp("Visible");
         designer.MainMenu.miViewMessages.SetChecked(mensagem == "1");
+        designer.MainMenu.miViewMessages.ToCheckedObservable()
+            .Subscribe(x => designer.MainMenu.miViewMessages.SetChecked(x));
         menu.Items.Add(new MenuItem
         {
             Header = "Mensagens",
