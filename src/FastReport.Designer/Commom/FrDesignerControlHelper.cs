@@ -432,6 +432,8 @@ internal sealed class FrDesignerMenuHelper
             barraFerramenta.Items.Add(menuItem);
         }
         
+        var mensagem = Config.Root.FindItem("Designer").FindItem("MessagesWindow").GetProp("Visible");
+        designer.MainMenu.miViewMessages.SetChecked(mensagem == "1");
         menu.Items.Add(new MenuItem
         {
             Header = "Mensagens",
@@ -502,8 +504,9 @@ internal sealed class FrDesignerMenuHelper
                 foreach (var undMenu in unidadeMenu.Items.Cast<MenuItem>())
                 {
                     if (undMenu == menuItem) continue;
+                    if (undMenu.Icon is not CheckBox mCheck) continue;
                     
-                    ((CheckBox)undMenu.Icon!).IsChecked = !checkBox.IsChecked;
+                    mCheck.IsChecked = !checkBox.IsChecked;
                 }
 
                 item.PerformClick();

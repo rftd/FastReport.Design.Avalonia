@@ -44,4 +44,10 @@
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
+    
+    <ItemGroup>
+      <None Update="Designer.icns">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
