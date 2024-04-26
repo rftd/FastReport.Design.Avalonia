@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 using FastReport.Utils;
@@ -19,24 +18,24 @@ using NuGet.Versioning;
 
 namespace FastReport.Designer.Services;
 
-public sealed class FrPluginManager : IDisposable
+public sealed class PluginManagerService : IDisposable
 {
     #region Fields
 
+    private bool disposedValue;
     private const string NugetFeed = "https://api.nuget.org/v3/index.json";
     private const string FrNugetFeed = "https://nuget.fast-report.com/api/v3/index.json";
     private readonly string[] excludesPlugins = ["FastReport.Data.MsSql"];
     private readonly SourceCacheContext sourceCacheContext;
     private readonly PackageDownloadContext downloadContext;
-    private bool disposedValue;
-    private List<FrPlugin> availablePlugins;
-    private List<FrPlugin> installedPlugins;
+    private readonly List<FrPlugin> availablePlugins;
+    private readonly List<FrPlugin> installedPlugins;
 
     #endregion Fields
     
     #region Constructors
     
-    public FrPluginManager()
+    public PluginManagerService()
     {
         availablePlugins = new List<FrPlugin>();
         installedPlugins = new List<FrPlugin>();
@@ -46,7 +45,7 @@ public sealed class FrPluginManager : IDisposable
         CacheDirectory = Path.Combine(Environment.CurrentDirectory, "Cache");
     }
     
-    ~FrPluginManager()
+    ~PluginManagerService()
     {
         Dispose(false);
     }
@@ -159,6 +158,22 @@ public sealed class FrPluginManager : IDisposable
         
         var plugins = Config.Root.FindItem("Plugins");
 
+        var uninstallFile = Path.Combine(PluginDirectory, "plugins.uninstall");
+        XmlItem pluginsNode;
+        var uninstallDoc = new XmlDocument();
+        if (File.Exists(uninstallFile))
+        {
+            uninstallDoc.Load(uninstallFile);
+            pluginsNode = uninstallDoc.Root.FindItem("Plugins");
+        }
+        else
+        {
+            uninstallDoc.Root.Name = "Uninstall";
+            pluginsNode = uninstallDoc.Root.Add();
+            pluginsNode.Name = "Plugins";
+        }
+
+        XmlItem? pluginToUninstall = null;
         foreach (var item in plugins.Items)
         {
             var id = item.GetProp("Id");
@@ -167,10 +182,17 @@ public sealed class FrPluginManager : IDisposable
 
             if (id != plugin.Id) continue;
             
-            item.SetProp("Uninstall", "true");
+            pluginToUninstall = item;
             break;
         }
+
+        if (pluginToUninstall == null) throw new Exception("Plugin não encontrado");
+
+        pluginsNode.AddItem(pluginToUninstall);
+        plugins.Items.Remove(pluginToUninstall);
+        availablePlugins.Add(plugin);
         
+        uninstallDoc.Save(uninstallFile);
         return Task.CompletedTask;
     }
     

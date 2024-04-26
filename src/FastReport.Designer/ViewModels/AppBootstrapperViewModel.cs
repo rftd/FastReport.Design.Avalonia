@@ -28,10 +28,8 @@ public class AppBootstrapperViewModel : RouterViewModel
             var resp = await Dialogs.ShowAsync<PluginManagerDialogViewModel, bool, DialogOptions>(new DialogOptions());
             if(resp == false) return;
 
-            const string mensagem = "Você precisa reinicar a aplicação para que as alterações sejam aplicadas, reiniciar ?";
-            resp = await Dialogs.ConfirmAsync("Fast Report Design", mensagem);
-            if(resp == false) return;
-            
+            const string mensagem = "A aplicação precisa reinicar a aplicação para aplicar as alterações.";
+            await Dialogs.WarnAsync(mensagem);
             RestartApp();
         });
         

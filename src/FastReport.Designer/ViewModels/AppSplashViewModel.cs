@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Caramelo.MvvmApp.ViewModel;
 using DynamicData;
+using FastReport.Designer.Services;
 using FastReport.Utils;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Splat;
 
@@ -15,6 +18,7 @@ public class AppSplashViewModel : MvvmSplashViewModel
     #region Fields
 
     private string message;
+    private readonly PluginManagerService pluginManager;
 
     #endregion Fields
 
@@ -23,6 +27,7 @@ public class AppSplashViewModel : MvvmSplashViewModel
     public AppSplashViewModel(IServiceProvider service) : base(service)
     {
         message = "Iniciando o Designer";
+        pluginManager = service.GetRequiredService<PluginManagerService>();
     }
 
     #endregion Constructors
@@ -46,44 +51,34 @@ public class AppSplashViewModel : MvvmSplashViewModel
 
     private async void VerifyPlugins()
     {
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FastReport");
-        var configFile = Path.Combine(path, "FastReport.Avalonia.config");
-
-        var configDoc = new XmlDocument();
-        configDoc.Load(configFile);
-
-        var plugins = configDoc.Root.FindItem("Plugins");
-        if (plugins.Items.Count < 1)
-            await Task.Delay(3000);
-        else
-            Message = "Desinstalando plugins";
-
-        var toRemove = new List<XmlItem>();
-        foreach (var item in plugins.Items)
+        var uninstallFile = Path.Combine(pluginManager.PluginDirectory, "plugins.uninstall");
+        if (File.Exists(uninstallFile))
         {
-            var uninstall = item.GetProp("Uninstall");
-            if(string.IsNullOrEmpty(uninstall)) continue;
-            
-            toRemove.Add(item);
-            var id = item.GetProp("Id");
-            if (string.IsNullOrEmpty(id))
-                id = Path.GetFileNameWithoutExtension(item.GetProp("Name"));
+            var uninstallDoc = new XmlDocument();
+            uninstallDoc.Load(uninstallFile);
+            var plugins = uninstallDoc.Root.FindItem("Plugins");
+            foreach (var pluginPath in plugins.Items
+                         .Select(item => Path.GetDirectoryName(item.GetProp("Name")))
+                         .Where(Path.Exists).Cast<string>())
+            {
+                try
+                {
+                    ClearFolder(pluginPath);
+                    Directory.Delete(pluginPath);
+                }
+                catch (Exception)
+                {
+                    //Ignore
+                }
+            }
 
-            try
-            {
-                var pluginPath = Path.Combine(Environment.CurrentDirectory, "Plugins", id);
-                ClearFolder(pluginPath);
-                Directory.Delete(pluginPath);
-            }
-            catch (Exception)
-            {
-                //Ignore
-            }
+            File.Delete(uninstallFile);
         }
-        
-        plugins.Items.RemoveMany(toRemove);
-        configDoc.Save(configFile);
-        configDoc.Dispose();
+        else
+        {
+            await Task.Delay(3000);
+        }
+       
         CloseSplash();
     }
     
@@ -98,6 +93,9 @@ public class AppSplashViewModel : MvvmSplashViewModel
             
             di.Delete();
         }
+        
+        foreach (var file in dir.GetFiles())
+            File.Delete(file.FullName);
     }
 
     #endregion Methods

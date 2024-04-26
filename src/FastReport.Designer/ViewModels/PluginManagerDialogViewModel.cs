@@ -16,7 +16,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
 {
     #region Fields
 
-    private readonly FrPluginManager manager;
+    private readonly PluginManagerService managerService;
     private bool hasInstallUninstall;
 
     #endregion Fields
@@ -25,7 +25,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
 
     public PluginManagerDialogViewModel(IServiceProvider service) : base(service)
     {
-        manager = Service.GetRequiredService<FrPluginManager>();
+        managerService = Service.GetRequiredService<PluginManagerService>();
         
         var isBusy = this.WhenAnyValue(x => x.IsBusy, x => x == false);
         
@@ -79,11 +79,11 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
 
         try
         {
-            await manager.LoadPluginsAsync();
+            await managerService.LoadPluginsAsync();
         
             AvailablePlugins.Clear();
-            AvailablePlugins.AddRange(manager.AvailablePlugins.Except(manager.InstaledPLugins));
-            InstaledPLugins.AddRange(manager.InstaledPLugins);
+            AvailablePlugins.AddRange(managerService.AvailablePlugins.Except(managerService.InstaledPLugins));
+            InstaledPLugins.AddRange(managerService.InstaledPLugins);
         }
         finally
         {
@@ -98,7 +98,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         try
         {
             foreach (var plugin in PluginsToInstall)
-                await manager.InstallAsync(plugin);
+                await managerService.InstallAsync(plugin);
         
             InstaledPLugins.AddRange(PluginsToInstall);
             AvailablePlugins.RemoveMany(PluginsToInstall);
@@ -118,7 +118,7 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         try
         {
             foreach (var plugin in PluginsToUninstall)
-                await manager.UninstallAsync(plugin);
+                await managerService.UninstallAsync(plugin);
         
             InstaledPLugins.RemoveMany(PluginsToUninstall);
             AvailablePlugins.AddRange(PluginsToUninstall);
