@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Avalonia;
@@ -12,13 +11,11 @@ using FastReport.Design.StandardDesigner;
 using FastReport.Design.Toolbars;
 using FastReport.Designer.Extensions;
 using FastReport.Designer.ViewModels;
-using FastReport.Designer.Views;
 using FastReport.Utils;
 using Material.Icons;
 using Material.Icons.Avalonia;
 using ReactiveUI;
 using CheckBox = Avalonia.Controls.CheckBox;
-using Control = System.Windows.Forms.Control;
 
 namespace FastReport.Designer.Commom;
 
@@ -28,7 +25,7 @@ internal sealed class FrDesignerMenuHelper
 
     private readonly DesignerControl designer;
     private readonly AvaloniaDesignerControl control;
-    private Dictionary<int, MaterialIconKind> insertIcons = [];
+    private readonly Dictionary<int, MaterialIconKind> insertIcons = [];
 
     #endregion Fields
     
