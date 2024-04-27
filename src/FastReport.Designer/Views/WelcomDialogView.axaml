@@ -1,49 +1,103 @@
-﻿<Window x:Class="FastReport.Designer.Views.WelcomDialogView"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-    xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
-    mc:Ignorable="d" d:DesignWidth="684" d:DesignHeight="466"
-    WindowStartupLocation="CenterOwner" Width="684" Height="466"
-    Title="Welcome to FastReport Avalonia">
+﻿<caramelo:MvvmWindow x:TypeArguments="viewModels:WelcomeDialogViewModel" 
+                     x:Class="FastReport.Designer.Views.WelcomDialogView"
+                     xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                     xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
+                     xmlns:caramelo="https://github.com/rftd/Caramelo.MvvmApp"
+                     xmlns:viewModels="clr-namespace:FastReport.Designer.ViewModels"
+                     xmlns:commom="clr-namespace:FastReport.Designer.Commom"
+                     mc:Ignorable="d" d:DesignWidth="684" d:DesignHeight="466"
+                     WindowStartupLocation="CenterOwner" Width="684" Height="466"
+                     Title="Welcome to FastReport Avalonia">
+    
+    <Design.DataContext>
+        <viewModels:WelcomeDialogViewModel/>
+    </Design.DataContext>
     
     <DockPanel LastChildFill="True">
         <actipro:ChromedTitleBar DockPanel.Dock="Top"
                                  IsMaximizeButtonAllowed="False"
                                  IsMinimizeButtonAllowed="False"
-                                 >
+                                 IsCloseButtonAllowed="False">
             <actipro:ChromedTitleBar.LeftContent>
                 <TextBlock Margin="10,7,0,7" Text="Bem vindo ao Fast Report" FontSize="12" 
                            TextTrimming="CharacterEllipsis" FontWeight="Bold" />
             </actipro:ChromedTitleBar.LeftContent>
+            <actipro:ChromedTitleBar.RightContent>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding NewReportCommand}"
+                            CommandParameter="{x:Static commom:WelcomeType.None}"
+                            ContentTemplate="{actipro:GlyphTemplate CloseWindow16}"
+                            Theme="{actipro:ControlTheme TitleBarButton}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="Red" />
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </StackPanel>
+            </actipro:ChromedTitleBar.RightContent>
         </actipro:ChromedTitleBar>
         <Grid RowDefinitions="105, *, 30" ColumnDefinitions="342, 342">
             <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                    Source="../Assets/Welcome.png"/>
-            <StackPanel Margin="50, 20, 10, 10" Grid.Row="1" Grid.Column="0">
-                <TextBlock Text="Abrir Recentes" FontWeight="Bold" FontSize="16"/>
-                <ListBox HorizontalAlignment="Stretch" BorderThickness="0">
-                    <ListBoxItem Height="30">
+            <Border Grid.Row="1" Grid.Column="0" Margin="40, 10, 10, 10" 
+                    BorderThickness="0,0,0.5,0" BorderBrush="Black">
+                <StackPanel Name="RecentFiles" Margin="0, 10, 0, 0">
+                    <TextBlock Text="Abrir Recentes" FontWeight="Bold" FontSize="16"/>
+                    <Button BorderThickness="0" HorizontalContentAlignment="Left"
+                            Command="{Binding NewReportCommand}"
+                            CommandParameter="{x:Static commom:WelcomeType.Open}">
                         <StackPanel Orientation="Horizontal">
                             <avalonia:MaterialIcon Kind="FolderOpen" />
                             <TextBlock Text="Abrir..." />
                         </StackPanel>
-                    </ListBoxItem>
-                </ListBox>
-            </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
             <StackPanel Margin="50, 20, 10, 10" Grid.Row="1" Grid.Column="1">
                 <TextBlock Text="Criar novo" FontWeight="Bold" FontSize="16"/>
-                <ListBox HorizontalAlignment="Stretch" BorderThickness="0">
-                    <ListBoxItem Height="30">
-                        <StackPanel Orientation="Horizontal">
-                            <avalonia:MaterialIcon Kind="NewReleases" />
-                            <TextBlock Text="Relátorio em branco" />
-                        </StackPanel>
-                    </ListBoxItem>
-                </ListBox>
+                <Button BorderThickness="0" HorizontalContentAlignment="Left"
+                        Command="{Binding NewReportCommand}"
+                        CommandParameter="{x:Static commom:WelcomeType.NewBlank}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="FileDocument" />
+                        <TextBlock Text="Relátorio em branco" />
+                    </StackPanel>
+                </Button>
+                <Button BorderThickness="0" HorizontalContentAlignment="Left"
+                        Command="{Binding NewReportCommand}"
+                        CommandParameter="{x:Static commom:WelcomeType.NewInherited}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="FileDocumentMultiple" />
+                        <TextBlock Text="Relatório Herdado" />
+                    </StackPanel>
+                </Button>
+                <Button BorderThickness="0" HorizontalContentAlignment="Left"
+                        Command="{Binding NewReportCommand}"
+                        CommandParameter="{x:Static commom:WelcomeType.ReportWizard}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="FileDocumentCheck" />
+                        <TextBlock Text="Assistente de Relatórios Padrão" />
+                    </StackPanel>
+                </Button>
+                <Button BorderThickness="0" HorizontalContentAlignment="Left"
+                        Command="{Binding NewReportCommand}"
+                        CommandParameter="{x:Static commom:WelcomeType.LabelWizard}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="FileDocumentPlus" />
+                        <TextBlock Text="Assistente de Etiquetas" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
+            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0,0.5,0,0" BorderBrush="Black">
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding ShowWelcome}" Content="Exibir ao Iniciar" />
+                </StackPanel>
+            </Border>
         </Grid>
     </DockPanel>
-</Window>
+</caramelo:MvvmWindow>

@@ -5,6 +5,8 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
+using FastReport.Designer.Commom;
+using FastReport.Utils;
 using ReactiveUI;
 
 namespace FastReport.Designer.ViewModels;
@@ -15,6 +17,7 @@ public class AppBootstrapperViewModel : RouterViewModel
 
     private Report report;
     private readonly Subject<string[]> restartApp;
+    private readonly Subject<WelcomeResult> welcomeResult;
 
     #endregion Fields
 
@@ -34,6 +37,7 @@ public class AppBootstrapperViewModel : RouterViewModel
         });
         
         restartApp = new Subject<string[]>();
+        welcomeResult = new Subject<WelcomeResult>();
         
         var args = Environment.GetCommandLineArgs();
         if(args.Length < 2) return;
@@ -59,12 +63,25 @@ public class AppBootstrapperViewModel : RouterViewModel
     }
     
     public IObservable<string[]> OnRestartApp => restartApp.AsObservable();
+    
+    public IObservable<WelcomeResult> OnWelcome => welcomeResult.AsObservable();
 
     public ReactiveCommand<Unit, Unit> PluginManagerCommand { get; }
 
     #endregion Properties
 
     #region Methods
+
+    public override async void ViewAppeared()
+    {
+        if(!Config.WelcomeEnabled) return;
+        
+        var ret = await Dialogs.ShowAsync<WelcomeDialogViewModel, WelcomeResult, DialogOptions>(new DialogOptions());
+        
+        welcomeResult.OnNext(ret);
+        welcomeResult.OnCompleted();
+        welcomeResult.Dispose();
+    }
 
     private void RestartApp()
     {

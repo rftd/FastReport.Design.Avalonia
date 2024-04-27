@@ -1,13 +1,13 @@
-using System.Reactive.Disposables;
+using System;
 using Avalonia;
 using Avalonia.Controls;
-using AvaloniaEdit.Utils;
+using System.Reactive.Disposables;
 using Caramelo.MvvmApp.Avalonia.Controls;
+using FastReport.Designer.Commom;
 using FastReport.Designer.Extensions;
 using FastReport.Designer.ViewModels;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
-using Application = Avalonia.Application;
 
 namespace FastReport.Designer.Views;
 
@@ -28,6 +28,24 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
                     return;
                 
                 ((App)Application.Current).DesktopApp.Restart(x);
+            });
+
+            ViewModel.OnWelcome.Subscribe(result =>
+            {
+                switch (result.Tipo)
+                {
+                    case WelcomeType.Open:
+                        DesignerControl.cmdOpen.Execute(null);
+                        break;
+                    
+                    case WelcomeType.Recent:
+                        DesignerControl.cmdOpen.LoadFile(result.File);
+                        break;
+                    
+                    default:
+                        result.Wizard?.Run(DesignerControl.InnerDesigner);
+                        break;
+                }
             });
         });
 
