@@ -64,7 +64,7 @@ public class AppBootstrapperViewModel : RouterViewModel
     
     public IObservable<string[]> OnRestartApp => restartApp.AsObservable();
     
-    public IObservable<WelcomeResult> OnWelcome => welcomeResult.AsObservable();
+    public IObservable<WelcomeResult> OnWelcomeDone => welcomeResult.AsObservable();
 
     public ReactiveCommand<Unit, Unit> PluginManagerCommand { get; }
 

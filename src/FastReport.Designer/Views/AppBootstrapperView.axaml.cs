@@ -30,7 +30,7 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
                 ((App)Application.Current).DesktopApp.Restart(x);
             });
 
-            ViewModel.OnWelcome.Subscribe(result =>
+            ViewModel.OnWelcomeDone.Subscribe(result =>
             {
                 switch (result.Tipo)
                 {
