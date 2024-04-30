@@ -8,6 +8,7 @@ using FastReport.Designer.Services;
 using FastReport.Designer.ViewModels;
 using FastReport.Designer.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace FastReport.Designer;
 
@@ -25,6 +26,13 @@ class Program
 
         // Registrando serviços
         builder.Services.AddTransient<PluginManagerService>();
+
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .WriteTo.File("fastreport_designer.log", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+        
+        builder.Logging.AddSerilog(dispose: true);
         
         // Registrando View/ViewModel
         builder.Services.AddViewTransient<PluginManagerDialogView, PluginManagerDialogViewModel>();

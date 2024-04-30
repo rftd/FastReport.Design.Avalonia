@@ -7,6 +7,7 @@ using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
 using FastReport.Designer.Commom;
 using FastReport.Utils;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace FastReport.Designer.ViewModels;
@@ -31,9 +32,14 @@ public class AppBootstrapperViewModel : RouterViewModel
             var resp = await Dialogs.ShowAsync<PluginManagerDialogViewModel, bool, DialogOptions>(new DialogOptions());
             if(resp == false) return;
 
-            const string mensagem = "A aplicação precisa reinicar a aplicação para aplicar as alterações.";
+            const string mensagem = "A aplicação precisa ser reiniciada para aplicar as alterações.";
             await Dialogs.WarnAsync(mensagem);
             RestartApp();
+        });
+
+        PluginManagerCommand.ThrownExceptions.Subscribe(ex =>
+        {
+            Log.LogError(ex, "Erro ao abrir a tela de gerenciamento de plugin.");
         });
         
         restartApp = new Subject<string[]>();

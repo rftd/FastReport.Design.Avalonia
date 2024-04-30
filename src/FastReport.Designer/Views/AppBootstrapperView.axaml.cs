@@ -28,7 +28,7 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
                     return;
                 
                 ((App)Application.Current).DesktopApp.Restart(x);
-            });
+            }).DisposeWith(disposables);
 
             ViewModel.OnWelcomeDone.Subscribe(result =>
             {
@@ -46,7 +46,7 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
                         result.Wizard?.Run(DesignerControl.InnerDesigner);
                         break;
                 }
-            });
+            }).DisposeWith(disposables);
         });
 
         this.Events().Loaded.Subscribe(_ =>

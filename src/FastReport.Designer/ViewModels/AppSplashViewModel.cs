@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Caramelo.MvvmApp.ViewModel;
-using DynamicData;
 using FastReport.Designer.Services;
 using FastReport.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
-using Splat;
 
 namespace FastReport.Designer.ViewModels;
 
@@ -28,12 +26,16 @@ public class AppSplashViewModel : MvvmSplashViewModel
     {
         message = "Iniciando o Designer";
         pluginManager = service.GetRequiredService<PluginManagerService>();
+        Log = service.GetRequiredService<ILogger<AppSplashViewModel>>();
+        this.WhenAnyValue(x => x.Message).Subscribe(msg => Log.LogInformation(msg));
     }
 
     #endregion Constructors
 
     #region Properties
 
+    public ILogger<AppSplashViewModel> Log { get; set; }
+    
     public string Message
     {
         get => message;
@@ -54,6 +56,8 @@ public class AppSplashViewModel : MvvmSplashViewModel
         var uninstallFile = Path.Combine(pluginManager.PluginDirectory, "plugins.uninstall");
         if (File.Exists(uninstallFile))
         {
+            Message = "Removendo Plugins";
+            
             var uninstallDoc = new XmlDocument();
             uninstallDoc.Load(uninstallFile);
             var plugins = uninstallDoc.Root.FindItem("Plugins");
@@ -68,11 +72,12 @@ public class AppSplashViewModel : MvvmSplashViewModel
                 }
                 catch (Exception)
                 {
-                    //Ignore
+                    //
                 }
             }
 
             File.Delete(uninstallFile);
+            Message = "Plugins Removidos";
         }
         else
         {

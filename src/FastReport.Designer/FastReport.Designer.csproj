@@ -28,6 +28,8 @@
         <PackageReference Include="NuGet.Protocol" Version="6.9.1" />
         <PackageReference Include="NuGet.Resolver" Version="6.9.1" />
         <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -49,9 +51,5 @@
       <None Update="Designer.icns">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Commom\Data\" />
     </ItemGroup>
 </Project>
