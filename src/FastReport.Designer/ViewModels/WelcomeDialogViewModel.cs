@@ -5,6 +5,8 @@ using Caramelo.MvvmApp.ViewModel;
 using FastReport.Designer.Commom;
 using FastReport.Utils;
 using FastReport.Wizards;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace FastReport.Designer.ViewModels;
@@ -17,7 +19,7 @@ public class WelcomeDialogViewModel : MvvmDialogViewModel<DialogOptions, Welcome
 
     public WelcomeDialogViewModel(IServiceProvider service) : base(service)
     {
-        showWelcome = true;
+        showWelcome = Config.WelcomeEnabled;
         this.WhenAnyValue(x => x.ShowWelcome).Subscribe(x => Config.WelcomeEnabled = x);
         
         NewReportCommand = ReactiveCommand.Create<WelcomeType>(tipo =>
@@ -34,9 +36,19 @@ public class WelcomeDialogViewModel : MvvmDialogViewModel<DialogOptions, Welcome
             SetResult(new WelcomeResult { Tipo = tipo, Wizard = wizard });
         });
         
+        NewReportCommand.ThrownExceptions.Subscribe(ex =>
+        {
+            Log.LogError(ex, "Erro ao abrir um novo relatório");
+        });
+        
         RecentReportCommand = ReactiveCommand.Create<string>(file =>
         {
             SetResult(new WelcomeResult { Tipo = WelcomeType.Recent, File = file });
+        });
+        
+        RecentReportCommand.ThrownExceptions.Subscribe(ex =>
+        {
+            Log.LogError(ex, "Erro ao abrir um relatorio recente");
         });
     }
 

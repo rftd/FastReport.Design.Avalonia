@@ -34,7 +34,7 @@ public class AppSplashViewModel : MvvmSplashViewModel
 
     #region Properties
 
-    public ILogger<AppSplashViewModel> Log { get; set; }
+    public ILogger<AppSplashViewModel> Log { get; }
     
     public string Message
     {

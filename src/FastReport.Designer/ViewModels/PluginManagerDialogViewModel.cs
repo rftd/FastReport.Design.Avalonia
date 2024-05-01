@@ -8,6 +8,7 @@ using Caramelo.MvvmApp.ViewModel;
 using DynamicData;
 using FastReport.Designer.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace FastReport.Designer.ViewModels;
@@ -36,7 +37,16 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         var canUninstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToUninstall.Count, (x, y) => x == false && y > 0);
         
         InstallCommand = ReactiveCommand.CreateFromTask(InstallPluginsAsync, canInstall);
+        InstallCommand.ThrownExceptions.Subscribe(ex =>
+        {
+            Log.LogError(ex, "Erro ao instalar um plugin");
+        });
+        
         UninstallCommand = ReactiveCommand.CreateFromTask(UninstallPluginsAsync, canUninstall);
+        UninstallCommand.ThrownExceptions.Subscribe(ex =>
+        {
+            Log.LogError(ex, "Erro ao desinstalar um plugin");
+        });
     }
 
     #endregion Constructors

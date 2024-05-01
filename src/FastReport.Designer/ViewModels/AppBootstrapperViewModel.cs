@@ -39,7 +39,7 @@ public class AppBootstrapperViewModel : RouterViewModel
 
         PluginManagerCommand.ThrownExceptions.Subscribe(ex =>
         {
-            Log.LogError(ex, "Erro ao abrir a tela de gerenciamento de plugin.");
+            Log.LogError(ex, "Erro ao abrir a tela de gerenciamento de plugin");
         });
         
         restartApp = new Subject<string[]>();
@@ -85,8 +85,6 @@ public class AppBootstrapperViewModel : RouterViewModel
         var ret = await Dialogs.ShowAsync<WelcomeDialogViewModel, WelcomeResult, DialogOptions>(new DialogOptions());
         
         welcomeResult.OnNext(ret);
-        welcomeResult.OnCompleted();
-        welcomeResult.Dispose();
     }
 
     private void RestartApp()
