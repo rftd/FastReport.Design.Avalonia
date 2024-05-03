@@ -6,6 +6,7 @@ using Caramelo.MvvmApp.Avalonia.Controls;
 using FastReport.Designer.Commom;
 using FastReport.Designer.Extensions;
 using FastReport.Designer.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
@@ -19,6 +20,8 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
         
         this.WhenActivated(disposables =>
         {
+            ViewModel.MenuHelper.AvaloniaDesigner = DesignerControl;
+            
             this.Bind(ViewModel, viewModel => viewModel.Report, view => view.DesignerControl.Report)
                 .DisposeWith(disposables);
 
@@ -51,8 +54,7 @@ public partial class AppBootstrapperView : MvvmWindow<AppBootstrapperViewModel>
 
         this.Events().Loaded.Subscribe(_ =>
         {
-            var helper = DesignerControl.GetMenuHelper();
-            helper.GenerateMenu(MainMenu, ViewModel);
+            ViewModel.MenuHelper.GenerateMenu(MainMenu, ViewModel);
             
             DesignerControl.RestoreConfig();
             DesignerControl.StartAutoSave();

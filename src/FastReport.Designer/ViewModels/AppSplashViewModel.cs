@@ -53,38 +53,47 @@ public class AppSplashViewModel : MvvmSplashViewModel
 
     private async void VerifyPlugins()
     {
-        var uninstallFile = Path.Combine(pluginManager.PluginDirectory, "plugins.uninstall");
-        if (File.Exists(uninstallFile))
+        try
         {
-            Message = "Removendo Plugins";
-            
-            var uninstallDoc = new XmlDocument();
-            uninstallDoc.Load(uninstallFile);
-            var plugins = uninstallDoc.Root.FindItem("Plugins");
-            foreach (var pluginPath in plugins.Items
-                         .Select(item => Path.GetDirectoryName(item.GetProp("Name")))
-                         .Where(Path.Exists).Cast<string>())
+            var uninstallFile = Path.Combine(pluginManager.PluginDirectory, "plugins.uninstall");
+            if (File.Exists(uninstallFile))
             {
-                try
-                {
-                    ClearFolder(pluginPath);
-                    Directory.Delete(pluginPath);
-                }
-                catch (Exception)
-                {
-                    //
-                }
-            }
+                Message = "Removendo Plugins";
 
-            File.Delete(uninstallFile);
-            Message = "Plugins Removidos";
+                var uninstallDoc = new XmlDocument();
+                uninstallDoc.Load(uninstallFile);
+                var plugins = uninstallDoc.Root.FindItem("Plugins");
+                foreach (var pluginPath in plugins.Items
+                             .Select(item => Path.GetDirectoryName(item.GetProp("Name")))
+                             .Where(Path.Exists).Cast<string>())
+                {
+                    try
+                    {
+                        ClearFolder(pluginPath);
+                        Directory.Delete(pluginPath);
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+                }
+
+                File.Delete(uninstallFile);
+                Message = "Plugins Removidos";
+            }
+            else
+            {
+                await Task.Delay(3000);
+            }
         }
-        else
+        catch (Exception exception)
         {
-            await Task.Delay(3000);
+            Log.LogError(exception, "Erro ao iniciar");
         }
-       
-        CloseSplash();
+        finally
+        {
+            CloseSplash();
+        }
     }
     
     private static void ClearFolder(string folderName)

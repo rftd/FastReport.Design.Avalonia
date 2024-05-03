@@ -4,6 +4,7 @@ using Avalonia.ReactiveUI;
 using Caramelo.MvvmApp;
 using Caramelo.MvvmApp.Avalonia.Extensions;
 using Caramelo.MvvmApp.Extensions;
+using FastReport.Designer.Commom;
 using FastReport.Designer.Services;
 using FastReport.Designer.ViewModels;
 using FastReport.Designer.Views;
@@ -26,6 +27,8 @@ class Program
 
         // Registrando serviços
         builder.Services.AddTransient<PluginManagerService>();
+        builder.Services.AddTransient<FrMenuLocalization>();
+        builder.Services.AddSingleton<FrDesignerMenuHelper>();
 
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using FastReport.Design;
-using FastReport.Designer.Commom;
 using FastReport.Utils;
 using ReactiveUI;
 
@@ -11,11 +9,6 @@ namespace FastReport.Designer.Extensions;
 
 internal static class DesignerControlExtensions
 {
-    public static FrDesignerMenuHelper GetMenuHelper(this AvaloniaDesignerControl control)
-    {
-        return new FrDesignerMenuHelper(control);
-    }
-
     public static void InsertObject(this Design.Designer designer, ObjectInfo info, InsertFrom source)
     {
         var method = typeof(Design.Designer).GetMethod("InsertObject", 

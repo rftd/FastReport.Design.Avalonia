@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Avalonia;
@@ -20,26 +22,33 @@ using CheckBox = Avalonia.Controls.CheckBox;
 
 namespace FastReport.Designer.Commom;
 
-internal sealed class FrDesignerMenuHelper
+public sealed class FrDesignerMenuHelper
 {
     #region Fields
-
-    private readonly DesignerControl designer;
-    private readonly AvaloniaDesignerControl control;
+    
     private readonly Dictionary<int, MaterialIconKind> insertIcons = [];
 
     #endregion Fields
     
     #region Constructors
 
-    public FrDesignerMenuHelper(AvaloniaDesignerControl designerControl)
+    public FrDesignerMenuHelper(FrMenuLocalization localization)
     {
-        control = designerControl;
-        designer = designerControl.InnerDesigner;
+        Localization = localization;
         Initialize();
     }
 
     #endregion Constructors
+
+    #region Properties
+
+    public FrMenuLocalization Localization { get; }
+
+    public AvaloniaDesignerControl AvaloniaDesigner { get; set; } = null!;
+
+    public DesignerControl Designer => AvaloniaDesigner.InnerDesigner;
+
+    #endregion Properties
 
     #region Methods
 
@@ -101,173 +110,195 @@ internal sealed class FrDesignerMenuHelper
 
     private MenuItem GenerateFileMenu(ICommand finishAppCmd)
     {
-        var menu = new MenuItem { Header = "Arquivo" };
-        menu.Items.Add(new MenuItem
+        var menu = new MenuItem { Header = Localization.File };
+        Localization.BindLocalization(menu, x => x.File);
+        menu.AddItem(subMenu =>
         {
-            Header = "Novo...",
-            Command = control.cmdNew,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileNew;
+            subMenu.Command = AvaloniaDesigner.cmdNew;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDocument
-            }
+            };
+            
+            Localization.BindLocalization(subMenu, x => x.FileNew);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Abrir...",
-            HotKey = KeyGesture.Parse("Ctrl+O"),
-            Command = control.cmdOpen,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileOpen;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+O");
+            subMenu.Command = AvaloniaDesigner.cmdOpen;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FolderOpen
-            }
+            };
+                
+            Localization.BindLocalization(subMenu, x => x.FileOpen);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Abrir Pagina...",
-            Command = control.cmdOpenPage,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileOpenPage;
+            subMenu.Command = AvaloniaDesigner.cmdOpenPage;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDownload
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileOpenPage);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Abrir da Nuvem...",
-            Command = control.cmdOpenViaCloud,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileOpenCloud;
+            subMenu.Command = AvaloniaDesigner.cmdOpenViaCloud;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.CloudDownload
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileOpenCloud);
         });
 
-        menu.Items.Add(new Separator());
+        menu.AddSeparator();
 
-        var recentFilesMenu = new MenuItem { Header = "Arquivos Recentes" };
-        menu.Items.Add(recentFilesMenu);
-        
-        menu.Events().SubmenuOpened.Subscribe(_ =>
+        menu.AddItem(subMenu =>
         {
-            recentFilesMenu.Items.Clear();
+            subMenu.Header = Localization.FileRecentFiles;
+            Localization.BindLocalization(subMenu, x => x.FileRecentFiles);
             
-            var recentFiles = designer.RecentFiles();
-            foreach (var recentFile in recentFiles)
+            menu.Events().SubmenuOpened.Subscribe(_ =>
             {
-                var item =new MenuItem
+                subMenu.Items.Clear();
+            
+                var recentFiles = Designer.RecentFiles();
+                foreach (var recentFile in recentFiles)
                 {
-                    Header = recentFile,
-                    Command = ReactiveCommand.Create(() =>
+                    var item =new MenuItem
                     {
-                        designer.cmdRecentFiles.LoadFile(recentFile);
-                    })
-                };
-
-                if (designer.cmdRecentFiles.IsCloudFile(recentFile))
-                {
-                    item.Icon = new MaterialIcon
-                    {
-                        Kind = MaterialIconKind.Cloud
+                        Header = recentFile,
+                        Command = ReactiveCommand.Create(() =>
+                        {
+                            Designer.cmdRecentFiles.LoadFile(recentFile);
+                        })
                     };
+
+                    if (Designer.cmdRecentFiles.IsCloudFile(recentFile))
+                    {
+                        item.Icon = new MaterialIcon
+                        {
+                            Kind = MaterialIconKind.Cloud
+                        };
+                    }
+
+                    subMenu.Items.Add(item);
                 }
 
-                recentFilesMenu.Items.Add(item);
-            }
-
-            recentFilesMenu.IsEnabled = recentFilesMenu.Items.Count > 0;
+                subMenu.IsEnabled = subMenu.Items.Count > 0;
+            });
         });
         
-        menu.Items.Add(new Separator());
+        menu.AddSeparator();
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Salvar...",
-            HotKey = KeyGesture.Parse("Ctrl+S"),
-            Command = control.cmdSave,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileSave;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+S");
+            subMenu.Command = AvaloniaDesigner.cmdSave;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.ContentSave
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileSave);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Salvar como...",
-            HotKey = KeyGesture.Parse("Ctrl+Alt+S"),
-            Command = control.cmdSaveAs,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileSaveAs;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+Alt+S");
+            subMenu.Command = AvaloniaDesigner.cmdSaveAs;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.ContentSaveEdit
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileSaveAs);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Salvar na Nuvem...",
-            HotKey = KeyGesture.Parse("Ctrl+Shift+S"),
-            Command = control.cmdSaveToCloud,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileSaveToCloud;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+Shift+S");
+            subMenu.Command = AvaloniaDesigner.cmdSaveToCloud;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.CloudUpload
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileSaveToCloud);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Salvar com dados...",
-            Command = control.cmdSaveWithRandomData,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileSaveWithRandomData;
+            subMenu.Command = AvaloniaDesigner.cmdSaveWithRandomData;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.ContentSavePlus
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileSaveWithRandomData);
         });
         
-        menu.Items.Add(new Separator());
+        menu.AddSeparator();
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Configuração da Página...",
-            Command = control.cmdPageSetup,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FilePageSetup;
+            subMenu.Command = AvaloniaDesigner.cmdPageSetup;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileCog
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FilePageSetup);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Pré-Visualizar...",
-            Command = control.cmdPreview,
-            HotKey = KeyGesture.Parse("Ctrl+P"),
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FilePreview;
+            subMenu.Command = AvaloniaDesigner.cmdPreview;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+P");
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.PrinterEye
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FilePreview);
         });
         
-        menu.Items.Add(new Separator());
+        menu.AddSeparator();
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Selecionar Idioma",
-            Command = control.cmdSelectLanguage,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileSelectLanguage;
+            subMenu.Command = ReactiveCommand.Create(() =>
+            {
+                AvaloniaDesigner.cmdSelectLanguage.Execute(null);
+                Localization.Update();
+            });
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.PrinterEye
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileSelectLanguage);
         });
         
-        menu.Items.Add(new Separator());
+        menu.AddSeparator();
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Sair...",
-            Command = finishAppCmd,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.FileExit;
+            subMenu.Command = finishAppCmd;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Close
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.FileExit);
         });
 
         return menu;
@@ -275,293 +306,323 @@ internal sealed class FrDesignerMenuHelper
 
     private MenuItem GenerateEditMenu()
     {
-        var menu = new MenuItem { Header = "Editar" };
-        menu.Items.Add(new MenuItem
+        var menu = new MenuItem { Header = Localization.Edit };
+        Localization.BindLocalization(menu, x => x.Edit);
+        
+        menu.AddItem(subMenu =>
         {
-            Header = "Desfazer",
-            HotKey = KeyGesture.Parse("Ctrl+Z"),
-            Command = control.cmdUndo,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditUndo;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+Z");
+            subMenu.Command = AvaloniaDesigner.cmdUndo;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Undo
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditUndo);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Refazer",
-            HotKey = KeyGesture.Parse("Ctrl+Y"),
-            Command = control.cmdRedo,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditRedo;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+Y");
+            subMenu.Command = AvaloniaDesigner.cmdRedo;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Redo
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditRedo);
         });
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Recortar",
-            HotKey = KeyGesture.Parse("Ctrl+X"),
-            Command = control.cmdCut,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditCut;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+X");
+            subMenu.Command = AvaloniaDesigner.cmdCut;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.ContentCut
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditCut);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Copiar",
-            HotKey = KeyGesture.Parse("Ctrl+C"),
-            Command = control.cmdCopy,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditCopy;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+C");
+            subMenu.Command = AvaloniaDesigner.cmdCopy;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.ContentCopy
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditCopy);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Colar",
-            HotKey = KeyGesture.Parse("Ctrl+V"),
-            Command = control.cmdPaste,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditPaste;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+V");
+            subMenu.Command = AvaloniaDesigner.cmdPaste;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.ContentPaste
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditPaste);
         });
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Nova Página",
-            HotKey = KeyGesture.Parse("Ctrl+N"),
-            Command = control.cmdNewPage,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditNewPage;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+N");
+            subMenu.Command = AvaloniaDesigner.cmdNewPage;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDocumentAdd
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditNewPage);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Copiar Página",
-            Command = control.cmdCopyPage,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditCopyPage;
+            subMenu.Command = AvaloniaDesigner.cmdCopyPage;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDocumentMultiple
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditCopyPage);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Apagar Página",
-            Command = control.cmdDeletePage,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditDeletePage;
+            subMenu.Command = AvaloniaDesigner.cmdDeletePage;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDocumentDelete
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditDeletePage);
         });
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Selecionar tudo",
-            HotKey = KeyGesture.Parse("Ctrl+A"),
-            Command = control.cmdSelectAll,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditSelectAll;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+A");
+            subMenu.Command = AvaloniaDesigner.cmdSelectAll;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.SelectAll
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditSelectAll);
         });
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Agrupar",
-            Command = control.cmdGroup,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditGroup;
+            subMenu.Command = AvaloniaDesigner.cmdGroup;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Group
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditGroup);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Desagrupar",
-            Command = control.cmdUngroup,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditUngroup;
+            subMenu.Command = AvaloniaDesigner.cmdUngroup;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Ungroup
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditUngroup);
         });
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Localizar...",
-            HotKey = KeyGesture.Parse("Ctrl+F"),
-            Command = control.cmdFind,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditFind;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+F");
+            subMenu.Command = AvaloniaDesigner.cmdFind;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FindInPage
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditFind);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Substituir...",
-            HotKey = KeyGesture.Parse("Ctrl+H"),
-            Command = control.cmdReplace,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.EditReplace;
+            subMenu.HotKey = KeyGesture.Parse("Ctrl+H");
+            subMenu.Command = AvaloniaDesigner.cmdReplace;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FindReplace
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.EditReplace);
         });
 
         return menu;
     }
-    
+
     private MenuItem GenerateViewMenu(ICommand pluginCmd)
     {
-        var menu = new MenuItem { Header = "Visualizar" };
-        var barraFerramenta = new MenuItem { Header = "Barra de Ferramenta" };
+        var menu = new MenuItem { Header = Localization.View };
+        Localization.BindLocalization(menu, x => x.View);
+
+        var barraFerramenta = new MenuItem { Header = Localization.ViewToolbars };
+        Localization.BindLocalization(barraFerramenta, x => x.ViewToolbars);
         menu.Items.Add(barraFerramenta);
 
-        foreach (var item in designer.Plugins.Cast<IDesignerPlugin>()
-                     .Where(x => x is DesignerToolbarBase).Cast<DesignerToolbarBase>())
+        barraFerramenta.Events().GotFocus.Subscribe(_ =>
         {
-            var menuItem = new MenuItem { Header = item.Text };
-            var checkBox = new CheckBox
+            barraFerramenta.Items.Clear();
+            foreach (var item in Designer.Plugins.Cast<IDesignerPlugin>()
+                         .Where(x => x is DesignerToolbarBase).Cast<DesignerToolbarBase>())
             {
-                BorderThickness = Thickness.Parse("0"),
-                IsHitTestVisible = false,
-                IsChecked = item.Visible
-            };
-            menuItem.Icon = checkBox;
-            
-            menuItem.Command = ReactiveCommand.Create(() =>
-            {
-                item.Visible = !item.Visible;
-                checkBox.IsChecked = item.Visible;
-                designer.LayoutToolbars();
-            });
-            
-            barraFerramenta.Items.Add(menuItem);
-        }
-        
-        var mensagem = Config.Root.FindItem("Designer").FindItem("MessagesWindow").GetProp("Visible");
-        designer.MainMenu.miViewMessages.SetChecked(mensagem == "1");
-        designer.MainMenu.miViewMessages.ToCheckedObservable()
-            .Subscribe(x => designer.MainMenu.miViewMessages.SetChecked(x));
-        menu.Items.Add(new MenuItem
-        {
-            Header = "Mensagens",
-            Icon =  new MaterialIcon
-            {
-                Kind = MaterialIconKind.MessageNotification
-            },
-            Command  = ReactiveCommand.Create(() =>
-            {
-                designer.MainMenu.miViewMessages.ToggleChecked();
-            })
+                var menuItem = new MenuItem { Header = item.Text };
+                var checkBox = new CheckBox
+                {
+                    BorderThickness = Thickness.Parse("0"),
+                    IsHitTestVisible = false,
+                    IsChecked = item.Visible
+                };
+                menuItem.Icon = checkBox;
+
+                menuItem.Command = ReactiveCommand.Create(() =>
+                {
+                    item.Visible = !item.Visible;
+                    checkBox.IsChecked = item.Visible;
+                    Designer.LayoutToolbars();
+                });
+
+                barraFerramenta.Items.Add(menuItem);
+            }
         });
 
-        menu.Items.Add(new Separator());
+        var mensagem = Config.Root.FindItem("Designer").FindItem("MessagesWindow").GetProp("Visible");
+        Designer.MainMenu.miViewMessages.SetChecked(mensagem == "1");
+        Designer.MainMenu.miViewMessages.ToCheckedObservable()
+            .Subscribe(x => Designer.MainMenu.miViewMessages.SetChecked(x));
+        menu.AddItem(subMenu =>
+        {
+            subMenu.Header = Localization.ViewMessages;
+            subMenu.Icon = new MaterialIcon
+            {
+                Kind = MaterialIconKind.MessageNotification
+            };
+            subMenu.Command = ReactiveCommand.Create(() => { Designer.MainMenu.miViewMessages.ToggleChecked(); });
+
+            Localization.BindLocalization(subMenu, x => x.ViewMessages);
+        });
+
+        menu.AddSeparator();
 
         int[] checkeds = [4, 5];
         for (var i = 4; i < 7; i++)
         {
-            var dropItem = designer.MainMenu.miView.DropDownItems[i];
+            var dropItem = Designer.MainMenu.miView.DropDownItems[i];
             menu.Items.Add(CreateCheckedItem(dropItem.Text, dropItem, checkeds.Contains(i)));
         }
-        
+
         menu.Items.Add(new MenuItem
         {
-            Header = designer.MainMenu.miView.DropDownItems[7].Text,
-            Command  = ReactiveCommand.Create(() =>
-            {
-                designer.MainMenu.miView.DropDownItems[7].PerformClick();
-            })
+            Header = Designer.MainMenu.miView.DropDownItems[7].Text,
+            Command = ReactiveCommand.Create(() => { Designer.MainMenu.miView.DropDownItems[7].PerformClick(); })
         });
-        
+
         menu.Items.Add(new MenuItem
         {
-            Header = designer.MainMenu.miView.DropDownItems[8].Text,
-            Command = ReactiveCommand.Create(() =>
-            {
-                designer.MainMenu.miView.DropDownItems[8].PerformClick();
-            })
+            Header = Designer.MainMenu.miView.DropDownItems[8].Text,
+            Command = ReactiveCommand.Create(() => { Designer.MainMenu.miView.DropDownItems[8].PerformClick(); })
         });
-        
-        menu.Items.Add(new Separator());
-        
-        var unidadeMenu = new MenuItem { Header = "Unidades" };
+
+        menu.AddSeparator();
+
+        var unidadeToolbar = (ToolStripMenuItem)Designer.MainMenu.miView.DropDownItems[10];
+        var unidadeMenu = new MenuItem { Header = unidadeToolbar.Text };
         menu.Items.Add(unidadeMenu);
-
-        var defaultUnit = Config.Root.FindItem("Designer").FindItem("Report").GetProp("Units");
-        var unitName = Res.TryGet($"Forms,ReportPageOptions,{defaultUnit}");
-        
-        var unidadeToolbar = (ToolStripMenuItem)designer.MainMenu.miView.DropDownItems[10];
-        foreach (var item in unidadeToolbar.DropDownItems.Cast<ToolStripMenuItem>())
+        unidadeMenu.Events().GotFocus.Subscribe(x =>
         {
-            var checkBox = new CheckBox
+            unidadeMenu.Items.Clear();
+            
+            var defaultUnit = Config.Root.FindItem("Designer").FindItem("Report").GetProp("Units");
+            var unitName = Res.TryGet($"Forms,ReportPageOptions,{defaultUnit}");
+            foreach (var item in unidadeToolbar.DropDownItems.Cast<ToolStripMenuItem>())
             {
-                BorderThickness = Thickness.Parse("0"),
-                IsHitTestVisible = false,
-                IsChecked = unitName == item.Text
-            };
-            var menuItem = new MenuItem
-            {
-                Header = item.Text,
-                Icon =  checkBox
-            };
-
-            menuItem.Command = ReactiveCommand.Create(() =>
-            {
-                checkBox.IsChecked = !checkBox.IsChecked;
-
-                foreach (var undMenu in unidadeMenu.Items.Cast<MenuItem>())
+                var checkBox = new CheckBox
                 {
-                    if (undMenu == menuItem) continue;
-                    if (undMenu.Icon is not CheckBox mCheck) continue;
-                    
-                    mCheck.IsChecked = !checkBox.IsChecked;
-                }
+                    BorderThickness = Thickness.Parse("0"),
+                    IsHitTestVisible = false,
+                    IsChecked = unitName == item.Text
+                };
+                var menuItem = new MenuItem
+                {
+                    Header = item.Text,
+                    Icon = checkBox
+                };
 
-                item.PerformClick();
-            });
+                menuItem.Command = ReactiveCommand.Create(() =>
+                {
+                    checkBox.IsChecked = !checkBox.IsChecked;
 
-            unidadeMenu.Items.Add(menuItem);
-        }
-        
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+                    foreach (var undMenu in unidadeMenu.Items.Cast<MenuItem>())
+                    {
+                        if (undMenu == menuItem) continue;
+                        if (undMenu.Icon is not CheckBox mCheck) continue;
+
+                        mCheck.IsChecked = !checkBox.IsChecked;
+                    }
+
+                    item.PerformClick();
+                });
+
+                unidadeMenu.Items.Add(menuItem);
+            }
+        });
+
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Plugin Manager",
-            Icon =  new MaterialIcon
+            subMenu.Header = "Plugin Manager";
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Plugin
-            },
-            Command = pluginCmd
+            };
+            subMenu.Command = pluginCmd;
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Opções",
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.ViewOptions;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Cogs
-            },
-            Command  = control.cmdOptions
+            };
+            subMenu.Command = AvaloniaDesigner.cmdOptions;
+            Localization.BindLocalization(subMenu, x => x.ViewOptions);
+        });
+        
+        menu.Events().SubmenuOpened.Subscribe(_ =>
+        {
+            unidadeMenu.Header = unidadeToolbar.Text;
+            for (var i = 4; i < 9; i++)
+                ((MenuItem)menu.Items[i-1]).Header = Designer.MainMenu.miView.DropDownItems[i].Text;
         });
 
         return menu;
     }
-    
+
     private MenuItem GenerateInsertMenu()
     {
-        var insertCommand = ReactiveCommand.Create<ObjectInfo>(item =>
+        var insertCommand = ReactiveCommand.Create<ObjectInfo>(
+            item => { Designer.InsertObject(item, InsertFrom.NewObject); },
+            Designer.cmdInsert.WhenAnyValue(x => x.Enabled));
+
+        var menu = new MenuItem { Header = Localization.Insert };
+        Localization.BindLocalization(menu, x => x.Insert);
+
+        menu.Events().GotFocus.Subscribe(_ =>
         {
-            designer.InsertObject(item, InsertFrom.NewObject);
-            
-        }, designer.cmdInsert.WhenAnyValue(x => x.Enabled));
-        
-        var menu = new MenuItem { Header = "Inserir" };
-        var item = RegisteredObjects.FindObject(typeof(ReportPage));
-        GenerateInsertMenu(menu, insertCommand, item.Items);
+            menu.Items.Clear();
+            var item = RegisteredObjects.FindObject(typeof(ReportPage));
+            GenerateInsertMenu(menu, insertCommand, item.Items);
+        });
 
         return menu;
     }
-    
+
     private void GenerateInsertMenu(MenuItem menuItem, ICommand command, IEnumerable<ObjectInfo> itens)
     {
         foreach (var item in itens)
@@ -595,60 +656,73 @@ internal sealed class FrDesignerMenuHelper
 
     private MenuItem GenerateReportMenu()
     {
-        var menu = new MenuItem { Header = "Relatório" };
+        var menu = new MenuItem { Header = Localization.Report };
+        Localization.BindLocalization(menu, x => x.Report);
 
-        var rptToolMenu = designer.MainMenu.miReport;
+        var rptToolMenu = Designer.MainMenu.miReport;
         
-        menu.Items.Add(CreateCheckedItem("Título do Relatório", rptToolMenu.DropDownItems[0], true));
-        menu.Items.Add(CreateCheckedItem("Sumário do Relatório", rptToolMenu.DropDownItems[1], false));
-        menu.Items.Add(CreateCheckedItem("Cabeçalho de Página", rptToolMenu.DropDownItems[2], true));
-        menu.Items.Add(CreateCheckedItem("Rodapé de Página", rptToolMenu.DropDownItems[3], true));
-        menu.Items.Add(CreateCheckedItem("Cabeçalho de Coluna", rptToolMenu.DropDownItems[4], false));
-        menu.Items.Add(CreateCheckedItem("Rodapé de Coluna", rptToolMenu.DropDownItems[5], false));
-        menu.Items.Add(CreateCheckedItem("Deslocamento", rptToolMenu.DropDownItems[6], false));
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[0].Text, rptToolMenu.DropDownItems[0], true));
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[1].Text, rptToolMenu.DropDownItems[1], false));
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[2].Text, rptToolMenu.DropDownItems[2], true));
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[3].Text, rptToolMenu.DropDownItems[3], true));
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[4].Text, rptToolMenu.DropDownItems[4], false));
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[5].Text, rptToolMenu.DropDownItems[5], false));
+        menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[6].Text, rptToolMenu.DropDownItems[6], false));
+        
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Configurar Bandas...",
-            Icon =  new MaterialIcon
+            subMenu.Header = rptToolMenu.DropDownItems[8].Text;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FormatListBulleted
-            },
-            Command = ReactiveCommand.Create(() =>
+            };
+            subMenu.Command = ReactiveCommand.Create(() =>
             {
                 rptToolMenu.DropDownItems[8].PerformClick();
-            })
+            });
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Estilos...",
-            Icon =  new MaterialIcon
+            subMenu.Header = rptToolMenu.DropDownItems[9].Text;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Style
-            },
-            Command = ReactiveCommand.Create(() =>
+            };
+            subMenu.Command = ReactiveCommand.Create(() =>
             {
                 rptToolMenu.DropDownItems[9].PerformClick();
-            })
+            });
         });
-        menu.Items.Add(new Separator());
-        menu.Items.Add(new MenuItem
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
-            Header = "Validar Relatório",
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.ReportValidation;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDocumentCheck
-            },
-            Command = control.cmdReportValidation
+            };
+            subMenu.Command = AvaloniaDesigner.cmdReportValidation;
+            Localization.BindLocalization(subMenu, x => x.ReportValidation);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Opções...",
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.ReportOptions;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.FileDocumentEdit
-            },
-            Command = control.cmdReportSettings
+            };
+            subMenu.Command = AvaloniaDesigner.cmdReportSettings;
+            Localization.BindLocalization(subMenu, x => x.ReportOptions);
+        });
+        
+        menu.Events().SubmenuOpened.Subscribe(x =>
+        {
+            for (var i = 0; i < 7; i++)
+                ((MenuItem)menu.Items[i]).Header = rptToolMenu.DropDownItems[i].Text;
+
+            ((MenuItem)menu.Items[8]).Header = rptToolMenu.DropDownItems[8].Text;
+            ((MenuItem)menu.Items[9]).Header = rptToolMenu.DropDownItems[9].Text;
         });
         
         return menu;
@@ -656,24 +730,27 @@ internal sealed class FrDesignerMenuHelper
     
     private MenuItem GenerateDataMenu()
     {
-        var menu = new MenuItem { Header = "Dados" };
-        menu.Items.Add(new MenuItem
+        var menu = new MenuItem { Header = Localization.Data };
+        Localization.BindLocalization(menu, x => x.Data);
+        menu.AddItem(subMenu =>
         {
-            Header = "Escolher Dados do Relatório",
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.DataAdd;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.DatabaseSettings
-            },
-            Command = control.cmdChooseData
+            };
+            subMenu.Command = AvaloniaDesigner.cmdChooseData;
+            Localization.BindLocalization(subMenu, x => x.DataAdd);
         });
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Adicionar fonte de dados",
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.DataChoose;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.DatabaseAdd
-            },
-            Command = control.cmdAddData
+            };
+            subMenu.Command = AvaloniaDesigner.cmdAddData;
+            Localization.BindLocalization(subMenu, x => x.DataChoose);
         });
 
         return menu;
@@ -681,36 +758,41 @@ internal sealed class FrDesignerMenuHelper
     
     private MenuItem GenerateHelpMenu()
     {
-        var menu = new MenuItem { Header = "Ajuda" };
-        menu.Items.Add(new MenuItem
+        var menu = new MenuItem { Header = Localization.Help };
+        Localization.BindLocalization(menu, x => x.Help);
+        
+        menu.AddItem(subMenu =>
         {
-            Header = "Conteúdo de Ajuda...",
-            HotKey = KeyGesture.Parse("F1"),
-            Command = control.cmdHelpContents,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.HelpContents;
+            subMenu.HotKey = KeyGesture.Parse("F1");
+            subMenu.Command = AvaloniaDesigner.cmdHelpContents;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.HelpCircle
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.HelpContents);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Conta...",
-            Command = control.cmdAccount,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.HelpAccount;
+            subMenu.Command = AvaloniaDesigner.cmdAccount;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.Account
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.HelpAccount);
         });
         
-        menu.Items.Add(new MenuItem
+        menu.AddItem(subMenu =>
         {
-            Header = "Sobre...",
-            Command = control.cmdAbout,
-            Icon =  new MaterialIcon
+            subMenu.Header = Localization.HelpAbout;
+            subMenu.Command = AvaloniaDesigner.cmdAbout;
+            subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.About
-            }
+            };
+            Localization.BindLocalization(subMenu, x => x.HelpAbout);
         });
 
         return menu;

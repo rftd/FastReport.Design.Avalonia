@@ -7,6 +7,7 @@ using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
 using FastReport.Designer.Commom;
 using FastReport.Utils;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
@@ -27,6 +28,7 @@ public class AppBootstrapperViewModel : RouterViewModel
     public AppBootstrapperViewModel(IServiceProvider service) : base(service)
     {
         report = new Report();
+        MenuHelper = Service.GetRequiredService<FrDesignerMenuHelper>();
         PluginManagerCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             var resp = await Dialogs.ShowAsync<PluginManagerDialogViewModel, bool, DialogOptions>(new DialogOptions());
@@ -67,6 +69,8 @@ public class AppBootstrapperViewModel : RouterViewModel
         get => report;
         set => this.RaiseAndSetIfChanged(ref report, value);
     }
+
+    public FrDesignerMenuHelper MenuHelper { get; }
     
     public IObservable<string[]> OnRestartApp => restartApp.AsObservable();
     
