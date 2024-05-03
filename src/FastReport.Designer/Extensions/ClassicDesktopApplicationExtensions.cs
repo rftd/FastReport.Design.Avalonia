@@ -9,12 +9,11 @@ public static class ClassicDesktopApplicationExtensions
 {
     public static void Restart(this IClassicDesktopStyleApplicationLifetime app, params string[] args)
     {
-        var verb = OperatingSystem.IsWindows() ? "" : "dotnet";
         var appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         if (string.IsNullOrEmpty(appPath)) throw new Exception();
         
         var exeName = Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs()[0]);
-        exeName += OperatingSystem.IsWindows() ? ".exe" : ".dll";
+        exeName += OperatingSystem.IsWindows() ? ".exe" : "";
         var exePath = Path.Combine(appPath, exeName);
         
         var startInfo = new ProcessStartInfo
@@ -22,7 +21,6 @@ public static class ClassicDesktopApplicationExtensions
             UseShellExecute = true,
             WorkingDirectory = Environment.CurrentDirectory,
             FileName = exePath,
-            Verb = verb,
             Arguments = string.Join(" ", args)
         };
 
