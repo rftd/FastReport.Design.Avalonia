@@ -734,23 +734,23 @@ public sealed class FrDesignerMenuHelper
         Localization.BindLocalization(menu, x => x.Data);
         menu.AddItem(subMenu =>
         {
-            subMenu.Header = Localization.DataAdd;
+            subMenu.Header = Localization.DataChoose;
             subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.DatabaseSettings
             };
             subMenu.Command = AvaloniaDesigner.cmdChooseData;
-            Localization.BindLocalization(subMenu, x => x.DataAdd);
+            Localization.BindLocalization(subMenu, x => x.DataChoose);
         });
         menu.AddItem(subMenu =>
         {
-            subMenu.Header = Localization.DataChoose;
+            subMenu.Header = Localization.DataAdd;
             subMenu.Icon = new MaterialIcon
             {
                 Kind = MaterialIconKind.DatabaseAdd
             };
             subMenu.Command = AvaloniaDesigner.cmdAddData;
-            Localization.BindLocalization(subMenu, x => x.DataChoose);
+            Localization.BindLocalization(subMenu, x => x.DataAdd);
         });
 
         return menu;
