@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using AvaloniaEdit.Utils;
 using Caramelo.MvvmApp.Avalonia.Controls;
-using FastReport.Designer.Commom;
 using FastReport.Designer.ViewModels;
-using FastReport.Utils;
-using FastReport.Wizards;
 using Material.Icons;
 using Material.Icons.Avalonia;
 using ReactiveMarbles.ObservableEvents;
@@ -23,7 +18,8 @@ public partial class WelcomDialogView : MvvmWindow<WelcomeDialogViewModel>
         InitializeComponent();
 
         this.Events().Loaded.Subscribe(_ =>
-        { foreach (var recentFile in ViewModel.RecentFiles)
+        { 
+            foreach (var recentFile in ViewModel.RecentFiles)
             {
                 RecentFiles.Children.Add(new Button
                 {

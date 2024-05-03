@@ -56,7 +56,7 @@ public class WelcomeDialogViewModel : MvvmDialogViewModel<DialogOptions, Welcome
 
     #region Properties
 
-    public string[] RecentFiles { get; private set; }
+    public string[] RecentFiles { get; private set; } = [];
 
     public bool ShowWelcome
     {
