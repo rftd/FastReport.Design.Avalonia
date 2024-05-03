@@ -11,7 +11,7 @@
                      xmlns:commom="clr-namespace:FastReport.Designer.Commom"
                      mc:Ignorable="d" d:DesignWidth="684" d:DesignHeight="466"
                      WindowStartupLocation="CenterOwner" Width="684" Height="466"
-                     Title="Welcome to FastReport Avalonia">
+                     Title="Welcome to FastReport Avalonia" CanResize="False">
     
     <Design.DataContext>
         <viewModels:WelcomeDialogViewModel/>
