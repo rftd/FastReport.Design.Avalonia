@@ -11,9 +11,9 @@ using ReactiveMarbles.ObservableEvents;
 
 namespace FastReport.Designer.Views;
 
-public partial class WelcomDialogView : MvvmWindow<WelcomeDialogViewModel>
+public partial class WelcomeDialogView : MvvmWindow<WelcomeDialogViewModel>
 {
-    public WelcomDialogView()
+    public WelcomeDialogView()
     {
         InitializeComponent();
 

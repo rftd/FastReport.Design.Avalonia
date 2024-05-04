@@ -39,7 +39,7 @@ class Program
         
         // Registrando View/ViewModel
         builder.Services.AddViewTransient<PluginManagerDialogView, PluginManagerDialogViewModel>();
-        builder.Services.AddViewTransient<WelcomDialogView, WelcomeDialogViewModel>();
+        builder.Services.AddViewTransient<WelcomeDialogView, WelcomeDialogViewModel>();
             
         var app = builder.Build();
         app.Run();
