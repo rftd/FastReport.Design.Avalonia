@@ -10,14 +10,3 @@ public class WelcomeResult
 
     public string? File { get; set; }
 }
-
-public enum WelcomeType
-{
-    None,
-    Open,
-    Recent,
-    NewBlank,
-    NewInherited,
-    ReportWizard,
-    LabelWizard
-}

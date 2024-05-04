@@ -5,7 +5,6 @@ using Caramelo.MvvmApp.ViewModel;
 using FastReport.Designer.Commom;
 using FastReport.Utils;
 using FastReport.Wizards;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
@@ -14,6 +13,7 @@ namespace FastReport.Designer.ViewModels;
 public class WelcomeDialogViewModel : MvvmDialogViewModel<DialogOptions, WelcomeResult>
 {
     private bool showWelcome;
+    private string[] recentFiles = [];
 
     #region Constructors
 
@@ -56,7 +56,11 @@ public class WelcomeDialogViewModel : MvvmDialogViewModel<DialogOptions, Welcome
 
     #region Properties
 
-    public string[] RecentFiles { get; private set; } = [];
+    public string[] RecentFiles
+    {
+        get => recentFiles;
+        private set => this.RaiseAndSetIfChanged(ref recentFiles, value);
+    }
 
     public bool ShowWelcome
     {
