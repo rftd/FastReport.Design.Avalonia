@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Avalonia;
@@ -42,11 +40,11 @@ public sealed class FrDesignerMenuHelper
 
     #region Properties
 
-    public FrMenuLocalization Localization { get; }
+    private FrMenuLocalization Localization { get; }
 
     public AvaloniaDesignerControl AvaloniaDesigner { get; set; } = null!;
 
-    public DesignerControl Designer => AvaloniaDesigner.InnerDesigner;
+    private DesignerControl Designer => AvaloniaDesigner.InnerDesigner;
 
     #endregion Properties
 
@@ -558,8 +556,11 @@ public sealed class FrDesignerMenuHelper
         menu.Events().SubmenuOpened.Subscribe(_ =>
         {
             for (var i = 4; i < 9; i++)
-                ((MenuItem)menu.Items[i-1]).Header = Designer.MainMenu.miView.DropDownItems[i].Text;
-            
+            {
+                if(menu.Items[i - 1] is not MenuItem item) continue;
+                item.Header = Designer.MainMenu.miView.DropDownItems[i].Text;
+            }
+
             var unidadeToolbar = (ToolStripMenuItem)Designer.MainMenu.miView.DropDownItems[10];
 
             unidadeMenu.Header = unidadeToolbar.Text;
@@ -715,13 +716,13 @@ public sealed class FrDesignerMenuHelper
             Localization.BindLocalization(subMenu, x => x.ReportOptions);
         });
         
-        menu.Events().SubmenuOpened.Subscribe(x =>
+        menu.Events().SubmenuOpened.Subscribe(_ =>
         {
-            for (var i = 0; i < 7; i++)
-                ((MenuItem)menu.Items[i]).Header = rptToolMenu.DropDownItems[i].Text;
-
-            ((MenuItem)menu.Items[8]).Header = rptToolMenu.DropDownItems[8].Text;
-            ((MenuItem)menu.Items[9]).Header = rptToolMenu.DropDownItems[9].Text;
+            for (var i = 0; i < 10; i++)
+            {
+                if(menu.Items[i] is not MenuItem item) continue;
+                item.Header = rptToolMenu.DropDownItems[i].Text;
+            }
         });
         
         return menu;
