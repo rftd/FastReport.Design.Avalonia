@@ -10,10 +10,8 @@
                      xmlns:viewModels="clr-namespace:FastReport.Designer.ViewModels"
                      xmlns:commom="clr-namespace:FastReport.Designer.Commom"
                      mc:Ignorable="d" d:DesignWidth="684" d:DesignHeight="466"
-                     WindowStartupLocation="CenterOwner" Width="684" Height="466"
-                     ExtendClientAreaToDecorationsHint="True" ExtendClientAreaChromeHints="NoChrome"
-                     ExtendClientAreaTitleBarHeightHint="-1" SystemDecorations="BorderOnly"
-                     Title="Welcome to FastReport Avalonia" CanResize="False">
+                     WindowStartupLocation="CenterOwner" SystemDecorations="BorderOnly"
+                     Width="673" Height="466" CanResize="False">
     
     <Design.DataContext>
         <viewModels:WelcomeDialogViewModel/>
@@ -43,12 +41,12 @@
                 </StackPanel>
             </actipro:ChromedTitleBar.RightContent>
         </actipro:ChromedTitleBar>
-        <Grid RowDefinitions="105, *, 30" ColumnDefinitions="342, 342">
+        <Grid RowDefinitions="105, *, 30" ColumnDefinitions="Auto, Auto">
             <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                    Source="../Assets/Welcome.png"/>
             <Border Grid.Row="1" Grid.Column="0" Margin="40, 10, 10, 10" 
                     BorderThickness="0,0,0.5,0" BorderBrush="Black">
-                <StackPanel Name="RecentFiles" Margin="0, 10, 0, 0">
+                <StackPanel Name="RecentFiles" Margin="0, 10, 10, 0">
                     <TextBlock Text="Abrir Recentes" FontWeight="Bold" FontSize="16"/>
                     <Button BorderThickness="0" HorizontalContentAlignment="Left"
                             Command="{Binding NewReportCommand}"

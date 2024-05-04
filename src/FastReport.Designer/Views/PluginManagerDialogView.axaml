@@ -2,17 +2,13 @@
                       x:Class="FastReport.Designer.Views.PluginManagerDialogView"
                       xmlns="https://github.com/avaloniaui"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                       xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
                       xmlns:plugin="clr-namespace:FastReport.Designer.Services"
                       xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                       xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                       xmlns:c="clr-namespace:LoadingIndicators.Avalonia;assembly=LoadingIndicators.Avalonia"
-                      ExtendClientAreaToDecorationsHint="True" ExtendClientAreaChromeHints="NoChrome"
-                      ExtendClientAreaTitleBarHeightHint="-1" SystemDecorations="BorderOnly"
-                      mc:Ignorable="d" Width="900" Height="600" CanResize="False">
+                      SystemDecorations="BorderOnly" Width="900" Height="600" CanResize="False">
     
     <Design.DataContext>
         <vm:PluginManagerDialogViewModel/>
