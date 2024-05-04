@@ -10,6 +10,8 @@
                       xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                       xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                       xmlns:c="clr-namespace:LoadingIndicators.Avalonia;assembly=LoadingIndicators.Avalonia"
+                      ExtendClientAreaToDecorationsHint="True" ExtendClientAreaChromeHints="NoChrome"
+                      ExtendClientAreaTitleBarHeightHint="-1" SystemDecorations="BorderOnly"
                       mc:Ignorable="d" Width="900" Height="600" CanResize="False">
     
     <Design.DataContext>

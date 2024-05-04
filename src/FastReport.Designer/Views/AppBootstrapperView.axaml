@@ -11,8 +11,9 @@
                  xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                  x:Class="FastReport.Designer.Views.AppBootstrapperView" WindowState="Maximized"
-                 Icon="/Assets/Designer.ico" CornerRadius="10"
-                 Title="FastReport Designer Avalonia">
+                 Icon="/Assets/Designer.ico" ExtendClientAreaToDecorationsHint="True"
+                 ExtendClientAreaChromeHints="NoChrome" ExtendClientAreaTitleBarHeightHint="-1"
+                 SystemDecorations="BorderOnly" Title="FastReport Designer Avalonia">
     
     <Design.DataContext>
         <vm:AppBootstrapperViewModel/>
@@ -24,27 +25,17 @@
                 <controls:DefaultCaption Text="Avalonia Designer"/>
             </actipro:ChromedTitleBar.LeftContent>
         </actipro:ChromedTitleBar>
-        
-        <Border x:Name="ContentArea" Background="Transparent" BorderBrush="{actipro:ThemeResource Container2BorderBrush}" 
-                BorderThickness="0,0,0,8">
-            <rui:RoutedViewHost DockPanel.Dock="Top" Router="{Binding Router}"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch">
-                <rui:RoutedViewHost.DefaultContent>
-                    <DockPanel LastChildFill="True">
-                        <Menu Name="MainMenu" DockPanel.Dock="Top">
-                            <MenuItem Header="Arquivo"/>
-                            <MenuItem Header="Editar"/>
-                            <MenuItem Header="Visualizar"/>
-                            <MenuItem Header="Inserir"/>
-                            <MenuItem Header="Relatório"/>
-                            <MenuItem Header="Dados"/>
-                            <MenuItem Header="Ajuda"/>
-                        </Menu>
-                        <fr:AvaloniaDesignerControl Name="DesignerControl" ShowMainMenu="false" />
-                    </DockPanel>
-                </rui:RoutedViewHost.DefaultContent>
-            </rui:RoutedViewHost>
-        </Border>
+        <DockPanel LastChildFill="True">
+            <Menu Name="MainMenu" DockPanel.Dock="Top">
+                <MenuItem Header="Arquivo"/>
+                <MenuItem Header="Editar"/>
+                <MenuItem Header="Visualizar"/>
+                <MenuItem Header="Inserir"/>
+                <MenuItem Header="Relatório"/>
+                <MenuItem Header="Dados"/>
+                <MenuItem Header="Ajuda"/>
+            </Menu>
+            <fr:AvaloniaDesignerControl Name="DesignerControl" ShowMainMenu="false" />
+        </DockPanel>
     </DockPanel>
 </mvvm:MvvmWindow>
