@@ -530,12 +530,39 @@ public sealed class FrDesignerMenuHelper
         });
 
         menu.AddSeparator();
-
-        var unidadeToolbar = (ToolStripMenuItem)Designer.MainMenu.miView.DropDownItems[10];
-        var unidadeMenu = new MenuItem { Header = unidadeToolbar.Text };
+        
+        var unidadeMenu = new MenuItem();
         menu.Items.Add(unidadeMenu);
-        unidadeMenu.Events().GotFocus.Subscribe(x =>
+        
+        menu.AddSeparator();
+        menu.AddItem(subMenu =>
         {
+            subMenu.Header = "Plugin Manager";
+            subMenu.Icon = new MaterialIcon
+            {
+                Kind = MaterialIconKind.Plugin
+            };
+            subMenu.Command = pluginCmd;
+        });
+        menu.AddItem(subMenu =>
+        {
+            subMenu.Header = Localization.ViewOptions;
+            subMenu.Icon = new MaterialIcon
+            {
+                Kind = MaterialIconKind.Cogs
+            };
+            subMenu.Command = AvaloniaDesigner.cmdOptions;
+            Localization.BindLocalization(subMenu, x => x.ViewOptions);
+        });
+        
+        menu.Events().SubmenuOpened.Subscribe(_ =>
+        {
+            for (var i = 4; i < 9; i++)
+                ((MenuItem)menu.Items[i-1]).Header = Designer.MainMenu.miView.DropDownItems[i].Text;
+            
+            var unidadeToolbar = (ToolStripMenuItem)Designer.MainMenu.miView.DropDownItems[10];
+
+            unidadeMenu.Header = unidadeToolbar.Text;
             unidadeMenu.Items.Clear();
             
             var defaultUnit = Config.Root.FindItem("Designer").FindItem("Report").GetProp("Units");
@@ -572,35 +599,7 @@ public sealed class FrDesignerMenuHelper
                 unidadeMenu.Items.Add(menuItem);
             }
         });
-
-        menu.AddSeparator();
-        menu.AddItem(subMenu =>
-        {
-            subMenu.Header = "Plugin Manager";
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Plugin
-            };
-            subMenu.Command = pluginCmd;
-        });
-        menu.AddItem(subMenu =>
-        {
-            subMenu.Header = Localization.ViewOptions;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Cogs
-            };
-            subMenu.Command = AvaloniaDesigner.cmdOptions;
-            Localization.BindLocalization(subMenu, x => x.ViewOptions);
-        });
         
-        menu.Events().SubmenuOpened.Subscribe(_ =>
-        {
-            unidadeMenu.Header = unidadeToolbar.Text;
-            for (var i = 4; i < 9; i++)
-                ((MenuItem)menu.Items[i-1]).Header = Designer.MainMenu.miView.DropDownItems[i].Text;
-        });
-
         return menu;
     }
 
