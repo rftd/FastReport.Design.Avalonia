@@ -10,7 +10,7 @@
                  xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                  x:Class="FastReport.Designer.Views.AppBootstrapperView" 
-                 WindowState="Maximized" SystemDecorations="BorderOnly" 
+                 SystemDecorations="BorderOnly" WindowState="Maximized"
                  CanResize="True" Title="FastReport Designer Avalonia">
     
     <Design.DataContext>
