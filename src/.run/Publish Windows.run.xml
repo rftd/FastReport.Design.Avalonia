@@ -1,0 +1,6 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish Windows" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" platform="Any CPU" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/../../../Programas/FastReport" target_framework="net8.0" uuid_high="848319623471055026" uuid_low="-8566615891027248245" />
+    <method v="2" />
+  </configuration>
+</component>

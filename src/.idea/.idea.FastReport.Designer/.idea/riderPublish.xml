@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LocationsWithSilentDeleteHolder">
+    <option name="locations">
+      <list>
+        <option value="$PROJECT_DIR$/FastReport.Designer/bin/Release/net8.0/osx-x64/publish" />
+        <option value="$PROJECT_DIR$/../../../Programas/FastReport" />
+      </list>
+    </option>
+  </component>
+</project>
