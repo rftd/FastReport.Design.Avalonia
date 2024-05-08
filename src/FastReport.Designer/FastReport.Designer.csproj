@@ -19,9 +19,9 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
         <PackageReference Include="Caramelo.MvvmApp" Version="1.0.0-alpha.2" />
         <PackageReference Include="Caramelo.MvvmApp.Avalonia" Version="1.0.0-alpha.2" />
-        <PackageReference Include="FastReport.Avalonia.Demo" Version="2024.2.1" />
-        <PackageReference Include="FastReport.Forms.Avalonia.Demo" Version="2024.2.1" />
-        <PackageReference Include="FastReport.Localization" Version="2024.2.1" />
+        <PackageReference Include="FastReport.Avalonia.Demo" Version="2024.2.3" />
+        <PackageReference Include="FastReport.Forms.Avalonia.Demo" Version="2024.2.3" />
+        <PackageReference Include="FastReport.Localization" Version="2024.2.3" />
         <PackageReference Include="LoadingIndicators.Avalonia" Version="11.0.10" />
         <PackageReference Include="Material.Icons.Avalonia" Version="2.1.9" />
         <PackageReference Include="NuGet.Packaging" Version="6.9.1" />
