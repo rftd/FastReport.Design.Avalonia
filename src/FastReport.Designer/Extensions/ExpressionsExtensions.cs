@@ -10,9 +10,7 @@ internal static class ExpressionsExtensions
     /// Gets a MemberInfo from a member expression.
     /// </summary>
     public static MemberInfo? GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
-        var memberExp = RemoveUnary(expression.Body) as MemberExpression;
-
-        if (memberExp == null) {
+        if (RemoveUnary(expression.Body) is not MemberExpression memberExp) {
             return null;
         }
 
