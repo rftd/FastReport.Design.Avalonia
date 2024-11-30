@@ -23,11 +23,11 @@ namespace FastReport.Designer.Commom;
 public sealed class FrDesignerMenuHelper
 {
     #region Fields
-    
+
     private readonly Dictionary<int, MaterialIconKind> insertIcons = [];
 
     #endregion Fields
-    
+
     #region Constructors
 
     public FrDesignerMenuHelper(FrMenuLocalization localization)
@@ -68,7 +68,7 @@ public sealed class FrDesignerMenuHelper
         insertIcons.Add(130, MaterialIconKind.ChartTimelineVariant);
         insertIcons.Add(249, MaterialIconKind.Svg);
         insertIcons.Add(126, MaterialIconKind.Text);
-        
+
         insertIcons.Add(105, MaterialIconKind.Minus);
         insertIcons.Add(107, MaterialIconKind.VectorLine);
         insertIcons.Add(150, MaterialIconKind.VectorLine);
@@ -85,12 +85,12 @@ public sealed class FrDesignerMenuHelper
         insertIcons.Add(243, MaterialIconKind.HexagonOutline);
         insertIcons.Add(244, MaterialIconKind.OctagonOutline);
         insertIcons.Add(245, MaterialIconKind.OctagonOutline);
-        
+
         insertIcons.Add(142, MaterialIconKind.Matrix);
-        
+
         insertIcons.Add(149, MaterialIconKind.Qrcode);
         insertIcons.Add(123, MaterialIconKind.Barcode);
-        
+
         insertIcons.Add(140, MaterialIconKind.Gauge);
     }
 
@@ -114,46 +114,34 @@ public sealed class FrDesignerMenuHelper
         {
             subMenu.Header = Localization.FileNew;
             subMenu.Command = AvaloniaDesigner.cmdNew;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDocument
-            };
-            
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDocument };
+
             Localization.BindLocalization(subMenu, x => x.FileNew);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileOpen;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+O");
             subMenu.Command = AvaloniaDesigner.cmdOpen;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FolderOpen
-            };
-                
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FolderOpen };
+
             Localization.BindLocalization(subMenu, x => x.FileOpen);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileOpenPage;
             subMenu.Command = AvaloniaDesigner.cmdOpenPage;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDownload
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDownload };
             Localization.BindLocalization(subMenu, x => x.FileOpenPage);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileOpenCloud;
             subMenu.Command = AvaloniaDesigner.cmdOpenViaCloud;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.CloudDownload
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.CloudDownload };
             Localization.BindLocalization(subMenu, x => x.FileOpenCloud);
         });
 
@@ -163,29 +151,23 @@ public sealed class FrDesignerMenuHelper
         {
             subMenu.Header = Localization.FileRecentFiles;
             Localization.BindLocalization(subMenu, x => x.FileRecentFiles);
-            
+
             menu.Events().SubmenuOpened.Subscribe(_ =>
             {
                 subMenu.Items.Clear();
-            
+
                 var recentFiles = Designer.RecentFiles();
                 foreach (var recentFile in recentFiles)
                 {
-                    var item =new MenuItem
+                    var item = new MenuItem
                     {
                         Header = recentFile,
-                        Command = ReactiveCommand.Create(() =>
-                        {
-                            Designer.cmdRecentFiles.LoadFile(recentFile);
-                        })
+                        Command = ReactiveCommand.Create(() => { Designer.cmdRecentFiles.LoadFile(recentFile); })
                     };
 
                     if (Designer.cmdRecentFiles.IsCloudFile(recentFile))
                     {
-                        item.Icon = new MaterialIcon
-                        {
-                            Kind = MaterialIconKind.Cloud
-                        };
+                        item.Icon = new MaterialIcon { Kind = MaterialIconKind.Cloud };
                     }
 
                     subMenu.Items.Add(item);
@@ -194,83 +176,65 @@ public sealed class FrDesignerMenuHelper
                 subMenu.IsEnabled = subMenu.Items.Count > 0;
             });
         });
-        
+
         menu.AddSeparator();
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileSave;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+S");
             subMenu.Command = AvaloniaDesigner.cmdSave;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.ContentSave
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.ContentSave };
             Localization.BindLocalization(subMenu, x => x.FileSave);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileSaveAs;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+Alt+S");
             subMenu.Command = AvaloniaDesigner.cmdSaveAs;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.ContentSaveEdit
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.ContentSaveEdit };
             Localization.BindLocalization(subMenu, x => x.FileSaveAs);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileSaveToCloud;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+Shift+S");
             subMenu.Command = AvaloniaDesigner.cmdSaveToCloud;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.CloudUpload
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.CloudUpload };
             Localization.BindLocalization(subMenu, x => x.FileSaveToCloud);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileSaveWithRandomData;
             subMenu.Command = AvaloniaDesigner.cmdSaveWithRandomData;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.ContentSavePlus
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.ContentSavePlus };
             Localization.BindLocalization(subMenu, x => x.FileSaveWithRandomData);
         });
-        
+
         menu.AddSeparator();
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FilePageSetup;
             subMenu.Command = AvaloniaDesigner.cmdPageSetup;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileCog
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileCog };
             Localization.BindLocalization(subMenu, x => x.FilePageSetup);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FilePreview;
             subMenu.Command = AvaloniaDesigner.cmdPreview;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+P");
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.PrinterEye
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.PrinterEye };
             Localization.BindLocalization(subMenu, x => x.FilePreview);
         });
-        
+
         menu.AddSeparator();
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileSelectLanguage;
@@ -279,23 +243,17 @@ public sealed class FrDesignerMenuHelper
                 AvaloniaDesigner.cmdSelectLanguage.Execute(null);
                 Localization.Update();
             });
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.PrinterEye
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.PrinterEye };
             Localization.BindLocalization(subMenu, x => x.FileSelectLanguage);
         });
-        
+
         menu.AddSeparator();
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.FileExit;
             subMenu.Command = finishAppCmd;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Close
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Close };
             Localization.BindLocalization(subMenu, x => x.FileExit);
         });
 
@@ -306,16 +264,13 @@ public sealed class FrDesignerMenuHelper
     {
         var menu = new MenuItem { Header = Localization.Edit };
         Localization.BindLocalization(menu, x => x.Edit);
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.EditUndo;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+Z");
             subMenu.Command = AvaloniaDesigner.cmdUndo;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Undo
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Undo };
             Localization.BindLocalization(subMenu, x => x.EditUndo);
         });
         menu.AddItem(subMenu =>
@@ -323,10 +278,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditRedo;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+Y");
             subMenu.Command = AvaloniaDesigner.cmdRedo;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Redo
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Redo };
             Localization.BindLocalization(subMenu, x => x.EditRedo);
         });
         menu.AddSeparator();
@@ -335,10 +287,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditCut;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+X");
             subMenu.Command = AvaloniaDesigner.cmdCut;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.ContentCut
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.ContentCut };
             Localization.BindLocalization(subMenu, x => x.EditCut);
         });
         menu.AddItem(subMenu =>
@@ -346,10 +295,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditCopy;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+C");
             subMenu.Command = AvaloniaDesigner.cmdCopy;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.ContentCopy
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.ContentCopy };
             Localization.BindLocalization(subMenu, x => x.EditCopy);
         });
         menu.AddItem(subMenu =>
@@ -357,10 +303,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditPaste;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+V");
             subMenu.Command = AvaloniaDesigner.cmdPaste;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.ContentPaste
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.ContentPaste };
             Localization.BindLocalization(subMenu, x => x.EditPaste);
         });
         menu.AddSeparator();
@@ -369,30 +312,21 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditNewPage;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+N");
             subMenu.Command = AvaloniaDesigner.cmdNewPage;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDocumentAdd
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDocumentAdd };
             Localization.BindLocalization(subMenu, x => x.EditNewPage);
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.EditCopyPage;
             subMenu.Command = AvaloniaDesigner.cmdCopyPage;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDocumentMultiple
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDocumentMultiple };
             Localization.BindLocalization(subMenu, x => x.EditCopyPage);
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.EditDeletePage;
             subMenu.Command = AvaloniaDesigner.cmdDeletePage;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDocumentDelete
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDocumentDelete };
             Localization.BindLocalization(subMenu, x => x.EditDeletePage);
         });
         menu.AddSeparator();
@@ -401,10 +335,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditSelectAll;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+A");
             subMenu.Command = AvaloniaDesigner.cmdSelectAll;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.SelectAll
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.SelectAll };
             Localization.BindLocalization(subMenu, x => x.EditSelectAll);
         });
         menu.AddSeparator();
@@ -412,20 +343,14 @@ public sealed class FrDesignerMenuHelper
         {
             subMenu.Header = Localization.EditGroup;
             subMenu.Command = AvaloniaDesigner.cmdGroup;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Group
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Group };
             Localization.BindLocalization(subMenu, x => x.EditGroup);
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.EditUngroup;
             subMenu.Command = AvaloniaDesigner.cmdUngroup;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Ungroup
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Ungroup };
             Localization.BindLocalization(subMenu, x => x.EditUngroup);
         });
         menu.AddSeparator();
@@ -434,10 +359,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditFind;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+F");
             subMenu.Command = AvaloniaDesigner.cmdFind;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FindInPage
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FindInPage };
             Localization.BindLocalization(subMenu, x => x.EditFind);
         });
         menu.AddItem(subMenu =>
@@ -445,10 +367,7 @@ public sealed class FrDesignerMenuHelper
             subMenu.Header = Localization.EditReplace;
             subMenu.HotKey = KeyGesture.Parse("Ctrl+H");
             subMenu.Command = AvaloniaDesigner.cmdReplace;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FindReplace
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FindReplace };
             Localization.BindLocalization(subMenu, x => x.EditReplace);
         });
 
@@ -494,20 +413,22 @@ public sealed class FrDesignerMenuHelper
         Designer.MainMenu.miViewMessages.SetChecked(mensagem == "1");
         Designer.MainMenu.miViewMessages.ToCheckedObservable()
             .Subscribe(x => Designer.MainMenu.miViewMessages.SetChecked(x));
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.ViewMessages;
             subMenu.Icon = new MaterialIcon
             {
-                Kind = Designer.MainMenu.miViewMessages.GetChecked() ? 
-                    MaterialIconKind.MessageCheck : MaterialIconKind.MessageOff
+                Kind = Designer.MainMenu.miViewMessages.GetChecked()
+                    ? MaterialIconKind.MessageCheck
+                    : MaterialIconKind.MessageOff
             };
             subMenu.Command = ReactiveCommand.Create(() =>
             {
                 Designer.MainMenu.miViewMessages.ToggleChecked();
-                ((MaterialIcon)subMenu.Icon).Kind = Designer.MainMenu.miViewMessages.GetChecked() ? 
-                    MaterialIconKind.MessageCheck : MaterialIconKind.MessageOff;
+                ((MaterialIcon)subMenu.Icon).Kind = Designer.MainMenu.miViewMessages.GetChecked()
+                    ? MaterialIconKind.MessageCheck
+                    : MaterialIconKind.MessageOff;
             });
 
             Localization.BindLocalization(subMenu, x => x.ViewMessages);
@@ -535,36 +456,30 @@ public sealed class FrDesignerMenuHelper
         });
 
         menu.AddSeparator();
-        
+
         var unidadeMenu = new MenuItem();
         menu.Items.Add(unidadeMenu);
-        
+
         menu.AddSeparator();
         menu.AddItem(subMenu =>
         {
             subMenu.Header = "Plugin Manager";
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Plugin
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Plugin };
             subMenu.Command = pluginCmd;
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.ViewOptions;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Cogs
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Cogs };
             subMenu.Command = AvaloniaDesigner.cmdOptions;
             Localization.BindLocalization(subMenu, x => x.ViewOptions);
         });
-        
+
         menu.Events().SubmenuOpened.Subscribe(_ =>
         {
             for (var i = 4; i < 9; i++)
             {
-                if(menu.Items[i - 1] is not MenuItem item) continue;
+                if (menu.Items[i - 1] is not MenuItem item) continue;
                 item.Header = Designer.MainMenu.miView.DropDownItems[i].Text;
             }
 
@@ -572,7 +487,7 @@ public sealed class FrDesignerMenuHelper
 
             unidadeMenu.Header = unidadeToolbar.Text;
             unidadeMenu.Items.Clear();
-            
+
             var defaultUnit = Config.Root.FindItem("Designer").FindItem("Report").GetProp("Units");
             var unitName = Res.TryGet($"Forms,ReportPageOptions,{defaultUnit}");
             foreach (var item in unidadeToolbar.DropDownItems.Cast<ToolStripMenuItem>())
@@ -607,7 +522,7 @@ public sealed class FrDesignerMenuHelper
                 unidadeMenu.Items.Add(menuItem);
             }
         });
-        
+
         return menu;
     }
 
@@ -650,10 +565,7 @@ public sealed class FrDesignerMenuHelper
 
                 if (insertIcons.TryGetValue(item.ImageIndex, out var icon))
                 {
-                    menu.Icon = new MaterialIcon
-                    {
-                        Kind = icon
-                    };
+                    menu.Icon = new MaterialIcon { Kind = icon };
                 }
             }
 
@@ -667,7 +579,7 @@ public sealed class FrDesignerMenuHelper
         Localization.BindLocalization(menu, x => x.Report);
 
         var rptToolMenu = Designer.MainMenu.miReport;
-        
+
         menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[0].Text, rptToolMenu.DropDownItems[0], true));
         menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[1].Text, rptToolMenu.DropDownItems[1], false));
         menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[2].Text, rptToolMenu.DropDownItems[2], true));
@@ -675,66 +587,48 @@ public sealed class FrDesignerMenuHelper
         menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[4].Text, rptToolMenu.DropDownItems[4], false));
         menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[5].Text, rptToolMenu.DropDownItems[5], false));
         menu.Items.Add(CreateCheckedItem(rptToolMenu.DropDownItems[6].Text, rptToolMenu.DropDownItems[6], false));
-        
+
         menu.AddSeparator();
         menu.AddItem(subMenu =>
         {
             subMenu.Header = rptToolMenu.DropDownItems[8].Text;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FormatListBulleted
-            };
-            subMenu.Command = ReactiveCommand.Create(() =>
-            {
-                rptToolMenu.DropDownItems[8].PerformClick();
-            });
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FormatListBulleted };
+            subMenu.Command = ReactiveCommand.Create(() => { rptToolMenu.DropDownItems[8].PerformClick(); });
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = rptToolMenu.DropDownItems[9].Text;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Style
-            };
-            subMenu.Command = ReactiveCommand.Create(() =>
-            {
-                rptToolMenu.DropDownItems[9].PerformClick();
-            });
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Style };
+            subMenu.Command = ReactiveCommand.Create(() => { rptToolMenu.DropDownItems[9].PerformClick(); });
         });
         menu.AddSeparator();
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.ReportValidation;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDocumentCheck
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDocumentCheck };
             subMenu.Command = AvaloniaDesigner.cmdReportValidation;
             Localization.BindLocalization(subMenu, x => x.ReportValidation);
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.ReportOptions;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.FileDocumentEdit
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.FileDocumentEdit };
             subMenu.Command = AvaloniaDesigner.cmdReportSettings;
             Localization.BindLocalization(subMenu, x => x.ReportOptions);
         });
-        
+
         menu.Events().SubmenuOpened.Subscribe(_ =>
         {
             for (var i = 0; i < 10; i++)
             {
-                if(menu.Items[i] is not MenuItem item) continue;
+                if (menu.Items[i] is not MenuItem item) continue;
                 item.Header = rptToolMenu.DropDownItems[i].Text;
             }
         });
-        
+
         return menu;
     }
-    
+
     private MenuItem GenerateDataMenu()
     {
         var menu = new MenuItem { Header = Localization.Data };
@@ -742,69 +636,54 @@ public sealed class FrDesignerMenuHelper
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.DataChoose;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.DatabaseSettings
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.DatabaseSettings };
             subMenu.Command = AvaloniaDesigner.cmdChooseData;
             Localization.BindLocalization(subMenu, x => x.DataChoose);
         });
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.DataAdd;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.DatabaseAdd
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.DatabaseAdd };
             subMenu.Command = AvaloniaDesigner.cmdAddData;
             Localization.BindLocalization(subMenu, x => x.DataAdd);
         });
 
         return menu;
     }
-    
+
     private MenuItem GenerateHelpMenu()
     {
         var menu = new MenuItem { Header = Localization.Help };
         Localization.BindLocalization(menu, x => x.Help);
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.HelpContents;
             subMenu.HotKey = KeyGesture.Parse("F1");
             subMenu.Command = AvaloniaDesigner.cmdHelpContents;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.HelpCircle
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.HelpCircle };
             Localization.BindLocalization(subMenu, x => x.HelpContents);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.HelpAccount;
             subMenu.Command = AvaloniaDesigner.cmdAccount;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.Account
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.Account };
             Localization.BindLocalization(subMenu, x => x.HelpAccount);
         });
-        
+
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.HelpAbout;
             subMenu.Command = AvaloniaDesigner.cmdAbout;
-            subMenu.Icon = new MaterialIcon
-            {
-                Kind = MaterialIconKind.About
-            };
+            subMenu.Icon = new MaterialIcon { Kind = MaterialIconKind.About };
             Localization.BindLocalization(subMenu, x => x.HelpAbout);
         });
 
         return menu;
     }
-    
+
     private static MenuItem CreateCheckedItem(string header, ToolStripItem item, bool defaultValue)
     {
         var menuItem = new MenuItem
@@ -818,12 +697,12 @@ public sealed class FrDesignerMenuHelper
             IsHitTestVisible = false
         };
         menuItem.Icon = checkBox;
-        
+
         item.SetChecked(defaultValue);
         item.ToCheckedObservable().Subscribe(x => checkBox.IsChecked = x);
 
         return menuItem;
     }
-    
+
     #endregion Methods
 }

@@ -28,6 +28,7 @@ public partial class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOp
 
     public PluginManagerDialogViewModel(IServiceProvider service) : base(service)
     {
+        Title = "Plugin Manager";
         managerService = Service.GetRequiredService<PluginManagerService>();
         
         isBusy = this.WhenAnyValue(x => x.IsBusy, x => x == false);
