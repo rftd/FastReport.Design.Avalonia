@@ -1,6 +1,8 @@
-﻿using Avalonia;
+﻿using System.Reactive.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using AvaloniaEdit.Utils;
+using DynamicData.Binding;
 
 namespace FastReport.Designer.Controls;
 
@@ -18,10 +20,10 @@ public partial class DefaultCaption : UserControl
     public DefaultCaption()
     {
         InitializeComponent();
-
-        TextProperty.Changed.Subscribe(value =>
+        
+        this.WhenValueChanged(x => x.Text).Subscribe(value =>
         {
-            CaptionHeader.Text = value.NewValue.GetValueOrDefault();
+            CaptionHeader.Text = value;
         });
     }
 

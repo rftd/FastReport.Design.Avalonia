@@ -7,6 +7,7 @@ using Caramelo.MvvmApp.ViewModel;
 using FastReport.Designer.Commom;
 using FastReport.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI.SourceGenerators;
 
 namespace FastReport.Designer.ViewModels;
@@ -26,6 +27,7 @@ public partial class AppBootstrapperViewModel : RouterViewModel
 
     public AppBootstrapperViewModel(IServiceProvider service) : base(service)
     {
+        Title = "Avalonia Designer";
         report = new Report();
         MenuHelper = Service.GetRequiredService<FrDesignerMenuHelper>();
         welcomeResult = new Subject<WelcomeResult>();
@@ -59,7 +61,7 @@ public partial class AppBootstrapperViewModel : RouterViewModel
     private async Task PluginManager()
     {
         var resp = await Dialogs.ShowAsync<PluginManagerDialogViewModel, bool, DialogOptions>(new DialogOptions());
-        if(resp == false) return;
+        if (resp == false) return;
 
         const string mensagem = "A aplicação precisa ser reiniciada para aplicar as alterações.";
         await Dialogs.WarnAsync(mensagem);
@@ -71,11 +73,18 @@ public partial class AppBootstrapperViewModel : RouterViewModel
 
     public override async void ViewAppeared()
     {
-        if(!Config.WelcomeEnabled) return;
+        try
+        {
+            if(!Config.WelcomeEnabled) return;
         
-        var ret = await Dialogs.ShowAsync<WelcomeDialogViewModel, WelcomeResult, DialogOptions>(new DialogOptions());
+            var ret = await Dialogs.ShowAsync<WelcomeDialogViewModel, WelcomeResult, DialogOptions>(new DialogOptions());
         
-        welcomeResult.OnNext(ret);
+            welcomeResult.OnNext(ret);
+        }
+        catch (Exception e)
+        {
+            Log.LogError(e, "Erro ao fechar aplicação");
+        }
     }
 
     #endregion Methods
