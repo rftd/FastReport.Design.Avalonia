@@ -494,14 +494,21 @@ public sealed class FrDesignerMenuHelper
         Designer.MainMenu.miViewMessages.SetChecked(mensagem == "1");
         Designer.MainMenu.miViewMessages.ToCheckedObservable()
             .Subscribe(x => Designer.MainMenu.miViewMessages.SetChecked(x));
+        
         menu.AddItem(subMenu =>
         {
             subMenu.Header = Localization.ViewMessages;
             subMenu.Icon = new MaterialIcon
             {
-                Kind = MaterialIconKind.MessageNotification
+                Kind = Designer.MainMenu.miViewMessages.GetChecked() ? 
+                    MaterialIconKind.MessageCheck : MaterialIconKind.MessageOff
             };
-            subMenu.Command = ReactiveCommand.Create(() => { Designer.MainMenu.miViewMessages.ToggleChecked(); });
+            subMenu.Command = ReactiveCommand.Create(() =>
+            {
+                Designer.MainMenu.miViewMessages.ToggleChecked();
+                ((MaterialIcon)subMenu.Icon).Kind = Designer.MainMenu.miViewMessages.GetChecked() ? 
+                    MaterialIconKind.MessageCheck : MaterialIconKind.MessageOff;
+            });
 
             Localization.BindLocalization(subMenu, x => x.ViewMessages);
         });

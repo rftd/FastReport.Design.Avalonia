@@ -37,8 +37,8 @@ public sealed class PluginManagerService : IDisposable
     
     public PluginManagerService()
     {
-        availablePlugins = new List<FrPlugin>();
-        installedPlugins = new List<FrPlugin>();
+        availablePlugins = [];
+        installedPlugins = [];
         sourceCacheContext = new SourceCacheContext();
         downloadContext = new PackageDownloadContext(sourceCacheContext);
         PluginDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
@@ -230,8 +230,8 @@ public sealed class PluginManagerService : IDisposable
         
         var resolverContext = new PackageResolverContext(
             DependencyBehavior.Lowest, [packageId.Id],
-            Enumerable.Empty<string>(), Enumerable.Empty<PackageReference>(),
-            Enumerable.Empty<PackageIdentity>(), availablePackages, [repository.PackageSource],
+            [], [],
+            [], availablePackages, [repository.PackageSource],
             NullLogger.Instance);
         
         var frameworkReducer = new FrameworkReducer();
@@ -324,6 +324,9 @@ public sealed class PluginManagerService : IDisposable
         PackageSource source;
         if (UseFrNugetFeed)
         {
+            if(string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+                throw new Exception("Username and password are required.");
+            
             source = new PackageSource(FrNugetFeed)
             {
                 Credentials = new PackageSourceCredential(

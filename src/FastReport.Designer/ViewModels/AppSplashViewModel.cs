@@ -8,14 +8,17 @@ using FastReport.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace FastReport.Designer.ViewModels;
 
-public class AppSplashViewModel : MvvmSplashViewModel
+public partial class AppSplashViewModel : MvvmSplashViewModel
 {
     #region Fields
-
+    
+    [Reactive]
     private string message;
+    
     private readonly PluginManagerService pluginManager;
 
     #endregion Fields
@@ -35,12 +38,6 @@ public class AppSplashViewModel : MvvmSplashViewModel
     #region Properties
 
     public ILogger<AppSplashViewModel> Log { get; }
-    
-    public string Message
-    {
-        get => message;
-        set => this.RaiseAndSetIfChanged(ref message, value);
-    }
 
     #endregion Properties
 

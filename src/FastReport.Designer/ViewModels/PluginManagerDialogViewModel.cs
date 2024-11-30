@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
 using System.Threading.Tasks;
 using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
 using DynamicData;
 using FastReport.Designer.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace FastReport.Designer.ViewModels;
 
-public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOptions, bool>
+public partial class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOptions, bool>
 {
     #region Fields
 
     private readonly PluginManagerService managerService;
     private bool hasInstallUninstall;
+    private IObservable<bool> canInstall;
+    private IObservable<bool> canUninstall;
+    private IObservable<bool> isBusy;
 
     #endregion Fields
 
@@ -28,46 +30,26 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
     {
         managerService = Service.GetRequiredService<PluginManagerService>();
         
-        var isBusy = this.WhenAnyValue(x => x.IsBusy, x => x == false);
-        
-        ReloadPluginsCommand = ReactiveCommand.CreateFromTask(LoadPluginsAsync, isBusy);
-        CloseDialogCommand = ReactiveCommand.Create(OnClose, isBusy);
-        
-        var canInstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToInstall.Count, (x, y) => x == false && y > 0);
-        var canUninstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToUninstall.Count, (x, y) => x == false && y > 0);
-        
-        InstallCommand = ReactiveCommand.CreateFromTask(InstallPluginsAsync, canInstall);
-        InstallCommand.ThrownExceptions.Subscribe(ex =>
-        {
-            Log.LogError(ex, "Erro ao instalar um plugin");
-        });
-        
-        UninstallCommand = ReactiveCommand.CreateFromTask(UninstallPluginsAsync, canUninstall);
-        UninstallCommand.ThrownExceptions.Subscribe(ex =>
-        {
-            Log.LogError(ex, "Erro ao desinstalar um plugin");
-        });
+        isBusy = this.WhenAnyValue(x => x.IsBusy, x => x == false);
+        canInstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToInstall.Count, (x, y) => x == false && y > 0);
+        canUninstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToUninstall.Count, (x, y) => x == false && y > 0);
     }
 
     #endregion Constructors
 
     #region Properties
-    
-    public ReactiveCommand<Unit, Unit> InstallCommand { get; }
-    
-    public ReactiveCommand<Unit, Unit> UninstallCommand { get; }
-    
-    public ReactiveCommand<Unit, Unit> CloseDialogCommand { get; }
-    
-    public ReactiveCommand<Unit, Unit> ReloadPluginsCommand { get; }
 
-    public ObservableCollection<FrPlugin> AvailablePlugins { get; } = [];
-    
-    public ObservableCollection<FrPlugin> PluginsToInstall { get; } = [];
-    
-    public ObservableCollection<FrPlugin> InstaledPLugins { get; } = [];
-    
-    public ObservableCollection<FrPlugin> PluginsToUninstall { get; } = [];
+    [Reactive]
+    private ObservableCollection<FrPlugin> availablePlugins = [];
+
+    [Reactive]
+    private ObservableCollection<FrPlugin> pluginsToInstall = [];
+
+    [Reactive]
+    private ObservableCollection<FrPlugin> instaledPLugins = [];
+
+    [Reactive]
+    private ObservableCollection<FrPlugin> pluginsToUninstall = [];
 
     #endregion Properties
 
@@ -75,15 +57,17 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
 
     public override async void Initialize(DialogOptions parameter)
     {
-        await LoadPluginsAsync();
+        await ReloadPlugins();
     }
 
-    private void OnClose()
+    [ReactiveCommand]
+    private void CloseDialog()
     {
         SetResult(hasInstallUninstall);
     }
     
-    private async Task LoadPluginsAsync()
+    [ReactiveCommand(CanExecute = nameof(isBusy))]
+    private async Task ReloadPlugins()
     {
         IsBusy = true;
 
@@ -101,7 +85,8 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         }
     }
 
-    private async Task InstallPluginsAsync()
+    [ReactiveCommand(CanExecute = nameof(canInstall))]
+    private async Task Install()
     {
         IsBusy = true;
 
@@ -121,7 +106,8 @@ public sealed class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOpt
         }
     }
     
-    private async Task UninstallPluginsAsync()
+    [ReactiveCommand(CanExecute = nameof(canUninstall))]
+    private async Task Uninstall()
     {
         IsBusy = true;
 
