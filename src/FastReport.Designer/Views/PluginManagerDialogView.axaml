@@ -8,6 +8,7 @@
                  xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                  xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                  xmlns:c="clr-namespace:LoadingIndicators.Avalonia;assembly=LoadingIndicators.Avalonia"
+                 xmlns:commom="clr-namespace:FastReport.Designer.Commom"
                  SystemDecorations="BorderOnly" Width="900" Height="600" CanResize="False">
 
     <Design.DataContext>
@@ -15,7 +16,7 @@
     </Design.DataContext>
 
     <Window.Resources>
-        <DataTemplate x:Key="PluginTemplate" DataType="{x:Type plugin:FrPlugin}">
+        <DataTemplate x:Key="PluginTemplate" DataType="{x:Type commom:FastReportPlugin}">
             <DockPanel LastChildFill="True" Width="350">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding NameVersion}" FontWeight="Bold" />
                 <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
@@ -29,7 +30,7 @@
                                  IsMinimizeButtonAllowed="False"
                                  IsMaximizeButtonAllowed="False">
             <actipro:ChromedTitleBar.LeftContent>
-                <controls:DefaultCaption Text="{Binding Title}" />
+                <controls:DefaultCaption Title="{Binding Title}" />
             </actipro:ChromedTitleBar.LeftContent>
             <actipro:ChromedTitleBar.RightContent>
                 <StackPanel Orientation="Horizontal">

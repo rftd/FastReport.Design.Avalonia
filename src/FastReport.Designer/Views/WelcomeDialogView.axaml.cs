@@ -1,4 +1,4 @@
-﻿using Caramelo.MvvmApp.Avalonia.Controls;
+﻿using Caramelo.MvvmApp.Avalonia;
 using FastReport.Designer.ViewModels;
 
 namespace FastReport.Designer.Views;

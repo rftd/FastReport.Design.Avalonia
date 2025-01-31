@@ -20,7 +20,7 @@ using CheckBox = Avalonia.Controls.CheckBox;
 
 namespace FastReport.Designer.Commom;
 
-public sealed class FrDesignerMenuHelper
+public sealed class FastrReportDesignerMenuHelper
 {
     #region Fields
 
@@ -30,7 +30,7 @@ public sealed class FrDesignerMenuHelper
 
     #region Constructors
 
-    public FrDesignerMenuHelper(FrMenuLocalization localization)
+    public FastrReportDesignerMenuHelper(FastReportMenuLocalization localization)
     {
         Localization = localization;
         Initialize();
@@ -40,7 +40,7 @@ public sealed class FrDesignerMenuHelper
 
     #region Properties
 
-    private FrMenuLocalization Localization { get; }
+    private FastReportMenuLocalization Localization { get; }
 
     public AvaloniaDesignerControl AvaloniaDesigner { get; set; } = null!;
 

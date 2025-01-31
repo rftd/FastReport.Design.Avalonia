@@ -1,12 +1,13 @@
 ﻿using System;
+using ReactiveUI;
 
-namespace FastReport.Designer.Services;
+namespace FastReport.Designer.Commom;
 
-public class FrPlugin : IComparable<FrPlugin>, IEquatable<FrPlugin>
+public class FastReportPlugin : ReactiveObject, IComparable<FastReportPlugin>, IEquatable<FastReportPlugin>
 {
     #region Constructors
 
-    internal FrPlugin(string id, string name, string description, string version)
+    internal FastReportPlugin(string id, string name, string description, string version)
     {
         Id = id;
         Name = name;
@@ -32,7 +33,7 @@ public class FrPlugin : IComparable<FrPlugin>, IEquatable<FrPlugin>
 
     #region Methods
 
-    public bool Equals(FrPlugin? other)
+    public bool Equals(FastReportPlugin? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -43,7 +44,7 @@ public class FrPlugin : IComparable<FrPlugin>, IEquatable<FrPlugin>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        return obj.GetType() == GetType() && Equals((FrPlugin) obj);
+        return obj.GetType() == GetType() && Equals((FastReportPlugin) obj);
     }
 
     public override int GetHashCode()
@@ -51,7 +52,7 @@ public class FrPlugin : IComparable<FrPlugin>, IEquatable<FrPlugin>
         return HashCode.Combine(Id, Version);
     }
 
-    public int CompareTo(FrPlugin? other)
+    public int CompareTo(FastReportPlugin? other)
     {
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;

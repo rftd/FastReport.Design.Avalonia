@@ -11,25 +11,26 @@ namespace FastReport.Designer.ViewModels;
 
 public partial class WelcomeDialogViewModel : MvvmDialogViewModel<DialogOptions, WelcomeResult>
 {
-    #region Fields
-
-    [Reactive]
-    private bool showWelcome;
-    
-    [Reactive]
-    private string[] recentFiles = [];
-
-    #endregion Fields
-
     #region Constructors
 
     public WelcomeDialogViewModel(IServiceProvider service) : base(service)
     {
-        showWelcome = Config.WelcomeEnabled;
-        this.WhenAnyValue(x => x.ShowWelcome).Subscribe(x => Config.WelcomeEnabled = x);
+        ShowWelcome = Config.WelcomeEnabled;
+        this.WhenAnyValue(x => x.ShowWelcome)
+            .Subscribe(x => Config.WelcomeEnabled = x);
     }
 
     #endregion Constructors
+    
+    #region Properties
+
+    [Reactive]
+    public partial bool ShowWelcome { get; set; }
+    
+    [Reactive]
+    public partial  string[] RecentFiles { get; set; }
+
+    #endregion Properties
     
     #region Methods
 

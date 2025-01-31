@@ -23,23 +23,21 @@ class Program
     {
         var builder = MvvmApp.CreateBuilder();
         builder.UseAvalonia<App, AppBootstrapperViewModel, AppBootstrapperView>()
+            .UseDialogResolver<DialogWindowResolver>()
             .UserSplash<AppSplashView, AppSplashViewModel>();
 
         // Registrando serviços
         builder.Services.AddTransient<PluginManagerService>();
-        builder.Services.AddTransient<FrMenuLocalization>();
-        builder.Services.AddSingleton<FrDesignerMenuHelper>();
-
-        Log.Logger = new LoggerConfiguration()
-            .Enrich.FromLogContext()
-            .WriteTo.File("fastreport_designer.log", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
+        builder.Services.AddTransient<FastReportMenuLocalization>();
+        builder.Services.AddSingleton<FastrReportDesignerMenuHelper>();
         
-        builder.Logging.AddSerilog(dispose: true);
+        builder.Logging.AddSerilog(new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .WriteTo.File("Logs\\fastreport_designer.log", rollingInterval: RollingInterval.Day)
+            .CreateLogger(), dispose: true);
         
         // Registrando View/ViewModel
-        builder.Services.AddViewTransient<PluginManagerDialogView, PluginManagerDialogViewModel>();
-        builder.Services.AddViewTransient<WelcomeDialogView, WelcomeDialogViewModel>();
+        builder.Services.AddViewAndModelFromAssembly();
             
         var app = builder.Build();
         app.Run();

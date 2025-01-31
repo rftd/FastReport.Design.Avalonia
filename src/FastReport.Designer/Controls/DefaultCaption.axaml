@@ -7,8 +7,8 @@
              x:Class="FastReport.Designer.Controls.DefaultCaption">
     
     <StackPanel Orientation="Horizontal">
-        <Image Margin="15, 0, 0, 0" x:Name="ViewImage" DockPanel.Dock="Left" Width="24" Height="24" 
-               Source="/Assets/Designer.ico" VerticalAlignment="Center" IsHitTestVisible="False">
+        <Image Source="../Assets/Designer.ico" Margin="15, 0, 0, 0" x:Name="ViewImage" DockPanel.Dock="Left" Width="24" Height="24" 
+               VerticalAlignment="Center" IsHitTestVisible="False">
             <Image.Effect>
                 <DropShadowEffect OffsetX="0" OffsetY="1" BlurRadius="3" Opacity="{DynamicResource {actipro:ThemeResourceKey ShadowOpacity}}" />
             </Image.Effect>

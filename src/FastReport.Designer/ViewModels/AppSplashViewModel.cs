@@ -16,9 +16,6 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
 {
     #region Fields
     
-    [Reactive]
-    private string message;
-    
     private readonly PluginManagerService pluginManager;
 
     #endregion Fields
@@ -27,7 +24,7 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
 
     public AppSplashViewModel(IServiceProvider service) : base(service)
     {
-        message = "Iniciando o Designer";
+        Message = "Iniciando o Designer";
         pluginManager = service.GetRequiredService<PluginManagerService>();
         Log = service.GetRequiredService<ILogger<AppSplashViewModel>>();
         this.WhenAnyValue(x => x.Message).Subscribe(msg => Log.LogInformation(msg));
@@ -36,6 +33,9 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
     #endregion Constructors
 
     #region Properties
+    
+    [Reactive]
+    public partial string Message { get; set; }
 
     public ILogger<AppSplashViewModel> Log { get; }
 

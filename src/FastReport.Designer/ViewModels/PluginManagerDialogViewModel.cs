@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Caramelo.MvvmApp.Dialogs;
 using Caramelo.MvvmApp.ViewModel;
 using DynamicData;
+using FastReport.Designer.Commom;
 using FastReport.Designer.Services;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
@@ -30,6 +31,11 @@ public partial class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOp
     {
         Title = "Plugin Manager";
         managerService = Service.GetRequiredService<PluginManagerService>();
+
+        AvailablePlugins = [];
+        PluginsToInstall = [];
+        InstaledPLugins = [];
+        PluginsToUninstall = [];
         
         isBusy = this.WhenAnyValue(x => x.IsBusy, x => x == false);
         canInstall = this.WhenAnyValue(x => x.IsBusy, x => x.PluginsToInstall.Count, (x, y) => x == false && y > 0);
@@ -40,17 +46,17 @@ public partial class PluginManagerDialogViewModel : MvvmDialogViewModel<DialogOp
 
     #region Properties
 
-    [Reactive]
-    private ObservableCollection<FrPlugin> availablePlugins = [];
+    [Reactive] 
+    public partial ObservableCollection<FastReportPlugin> AvailablePlugins { get; set; }
 
     [Reactive]
-    private ObservableCollection<FrPlugin> pluginsToInstall = [];
+    public partial  ObservableCollection<FastReportPlugin> PluginsToInstall { get; set; }
 
     [Reactive]
-    private ObservableCollection<FrPlugin> instaledPLugins = [];
+    public partial  ObservableCollection<FastReportPlugin> InstaledPLugins { get; set; }
 
     [Reactive]
-    private ObservableCollection<FrPlugin> pluginsToUninstall = [];
+    public partial  ObservableCollection<FastReportPlugin> PluginsToUninstall { get; set; }
 
     #endregion Properties
 

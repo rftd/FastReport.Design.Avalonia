@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FastReport.Designer.Commom;
 using FastReport.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -28,8 +29,8 @@ public sealed class PluginManagerService : IDisposable
     private readonly string[] excludesPlugins = ["FastReport.Data.MsSql"];
     private readonly SourceCacheContext sourceCacheContext;
     private readonly PackageDownloadContext downloadContext;
-    private readonly List<FrPlugin> availablePlugins;
-    private readonly List<FrPlugin> installedPlugins;
+    private readonly List<FastReportPlugin> availablePlugins;
+    private readonly List<FastReportPlugin> installedPlugins;
 
     #endregion Fields
     
@@ -64,9 +65,9 @@ public sealed class PluginManagerService : IDisposable
 
     public string? Password { get; set; }
 
-    public FrPlugin[] AvailablePlugins => availablePlugins.ToArray();
+    public FastReportPlugin[] AvailablePlugins => availablePlugins.ToArray();
     
-    public FrPlugin[] InstaledPLugins => installedPlugins.ToArray();
+    public FastReportPlugin[] InstaledPLugins => installedPlugins.ToArray();
  
     #endregion Properties
 
@@ -101,7 +102,7 @@ public sealed class PluginManagerService : IDisposable
             var package = versions.SingleOrDefault(x => x.Version == version);
             if(package == null) continue;
             
-            availablePlugins.Add(new FrPlugin(
+            availablePlugins.Add(new FastReportPlugin(
                 id: metadata.Identity.Id,
                 version: version.ToString(),
                 name: metadata.Title,
@@ -111,7 +112,7 @@ public sealed class PluginManagerService : IDisposable
         LoadInstaledPlugins();
     }
     
-    public async Task InstallAsync(FrPlugin plugin)
+    public async Task InstallAsync(FastReportPlugin plugin)
     {
         if(installedPlugins.Any(x => x.Equals(plugin)))
             throw new Exception("Plugin já instalado");
@@ -151,7 +152,7 @@ public sealed class PluginManagerService : IDisposable
         installedPlugins.Add(plugin);
     }
 
-    public Task UninstallAsync(FrPlugin plugin)
+    public Task UninstallAsync(FastReportPlugin plugin)
     {
         if(installedPlugins.All(x => !x.Equals(plugin)))
             throw new Exception("Plugin não esta instalado instalado");
@@ -217,7 +218,7 @@ public sealed class PluginManagerService : IDisposable
             if (string.IsNullOrEmpty(id))
                 version = plugin.Version;
             
-            installedPlugins.Add(new FrPlugin(plugin.Id, plugin.Name, plugin.Description, version));
+            installedPlugins.Add(new FastReportPlugin(plugin.Id, plugin.Name, plugin.Description, version));
         }
     }
     

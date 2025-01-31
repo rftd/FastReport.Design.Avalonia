@@ -20,7 +20,7 @@
     <DockPanel>
         <actipro:ChromedTitleBar DockPanel.Dock="Top">
             <actipro:ChromedTitleBar.LeftContent>
-                <controls:DefaultCaption Text="{Binding Title}"/>
+                <controls:DefaultCaption Title="{Binding Title}"/>
             </actipro:ChromedTitleBar.LeftContent>
         </actipro:ChromedTitleBar>
         <DockPanel LastChildFill="True">

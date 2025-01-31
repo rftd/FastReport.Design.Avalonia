@@ -1,6 +1,6 @@
-﻿using System.Reactive.Linq;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using AvaloniaEdit.Utils;
 using DynamicData.Binding;
 
@@ -9,32 +9,29 @@ namespace FastReport.Designer.Controls;
 public partial class DefaultCaption : UserControl
 {
     #region Avalonia Properties
-
-    public static readonly StyledProperty<string> TextProperty =
-        AvaloniaProperty.Register<DefaultCaption, string>(nameof(Text), defaultValue: "");
+    
+    public static readonly StyledProperty<string> TitleProperty =
+        AvaloniaProperty.Register<DefaultCaption, string>(nameof(Title), defaultValue: "");
 
     #endregion Avalonia Properties
 
     #region Constructors
-
+    
     public DefaultCaption()
     {
         InitializeComponent();
         
-        this.WhenValueChanged(x => x.Text).Subscribe(value =>
-        {
-            CaptionHeader.Text = value;
-        });
+        this.WhenValueChanged(x => x.Title).Subscribe(value => CaptionHeader.Text = value);
     }
 
     #endregion Constructors
 
     #region Properties
 
-    public string Text
+    public string Title
     {
-        get => GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
+        get => GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     #endregion Properties
