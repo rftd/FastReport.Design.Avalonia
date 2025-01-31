@@ -18,8 +18,8 @@
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
-        <PackageReference Include="Caramelo.MvvmApp" Version="1.0.0-beta.2" />
-        <PackageReference Include="Caramelo.MvvmApp.Avalonia" Version="1.0.0-beta.2" />
+        <PackageReference Include="Caramelo.MvvmApp" Version="1.0.0-beta.4" />
+        <PackageReference Include="Caramelo.MvvmApp.Avalonia" Version="1.0.0-beta.4" />
         <PackageReference Include="FastReport.Avalonia.Demo" Version="2025.1.14" />
         <PackageReference Include="FastReport.Forms.Avalonia.Demo" Version="2025.1.14" />
         <PackageReference Include="FastReport.Localization" Version="2025.1.14" />

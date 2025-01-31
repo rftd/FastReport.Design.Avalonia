@@ -1,7 +1,7 @@
 ﻿using ActiproSoftware.UI.Avalonia.Controls;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Caramelo.MvvmApp.Avalonia.Dialogs;
+using Caramelo.MvvmApp.Avalonia.Commom;
 using FastReport.Designer.Controls;
 
 namespace FastReport.Designer.Commom;
