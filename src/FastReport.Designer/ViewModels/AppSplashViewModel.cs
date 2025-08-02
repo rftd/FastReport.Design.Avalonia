@@ -26,7 +26,6 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
     {
         Message = "Iniciando o Designer";
         pluginManager = service.GetRequiredService<PluginManagerService>();
-        Log = service.GetRequiredService<ILogger<AppSplashViewModel>>();
         this.WhenAnyValue(x => x.Message).Subscribe(msg => Log.LogInformation(msg));
     }
 
@@ -36,8 +35,6 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
     
     [Reactive]
     public partial string Message { get; set; }
-
-    public ILogger<AppSplashViewModel> Log { get; }
 
     #endregion Properties
 
@@ -52,36 +49,7 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
     {
         try
         {
-            var uninstallFile = Path.Combine(pluginManager.PluginDirectory, "plugins.uninstall");
-            if (File.Exists(uninstallFile))
-            {
-                Message = "Removendo Plugins";
-
-                var uninstallDoc = new XmlDocument();
-                uninstallDoc.Load(uninstallFile);
-                var plugins = uninstallDoc.Root.FindItem("Plugins");
-                foreach (var pluginPath in plugins.Items
-                             .Select(item => Path.GetDirectoryName(item.GetProp("Name")))
-                             .Where(Path.Exists).Cast<string>())
-                {
-                    try
-                    {
-                        ClearFolder(pluginPath);
-                        Directory.Delete(pluginPath);
-                    }
-                    catch (Exception)
-                    {
-                        //
-                    }
-                }
-
-                File.Delete(uninstallFile);
-                Message = "Plugins Removidos";
-            }
-            else
-            {
-                await Task.Delay(3000);
-            }
+            await UninstallPLuginsAsync();
         }
         catch (Exception exception)
         {
@@ -90,6 +58,40 @@ public partial class AppSplashViewModel : MvvmSplashViewModel
         finally
         {
             CloseSplash();
+        }
+    }
+    
+    private async Task UninstallPLuginsAsync()
+    {
+        var uninstallFile = Path.Combine(pluginManager.PluginDirectory, "plugins.uninstall");
+        if (File.Exists(uninstallFile))
+        {
+            Message = "Removendo Plugins";
+
+            var uninstallDoc = new XmlDocument();
+            uninstallDoc.Load(uninstallFile);
+            var plugins = uninstallDoc.Root.FindItem("Plugins");
+            foreach (var pluginPath in plugins.Items
+                         .Select(item => Path.GetDirectoryName(item.GetProp("Name")))
+                         .Where(Path.Exists).Cast<string>())
+            {
+                try
+                {
+                    ClearFolder(pluginPath);
+                    Directory.Delete(pluginPath);
+                }
+                catch (Exception)
+                {
+                    //
+                }
+            }
+
+            File.Delete(uninstallFile);
+            Message = "Plugins Removidos";
+        }
+        else
+        {
+            await Task.Delay(3000);
         }
     }
     

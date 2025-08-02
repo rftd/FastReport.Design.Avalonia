@@ -4,10 +4,10 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                  xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
-                 xmlns:plugin="clr-namespace:FastReport.Designer.Services"
-                 xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                  xmlns:controls="clr-namespace:FastReport.Designer.Controls"
                  xmlns:c="clr-namespace:LoadingIndicators.Avalonia;assembly=LoadingIndicators.Avalonia"
+                 xmlns:actipro="clr-namespace:ActiproSoftware.UI.Avalonia.Controls.Primitives;assembly=ActiproSoftware.Avalonia.Shared"
+                 xmlns:xaml="http://schemas.actiprosoftware.com/avaloniaui"
                  xmlns:commom="clr-namespace:FastReport.Designer.Commom"
                  SystemDecorations="BorderOnly" Width="900" Height="600" CanResize="False">
 
@@ -35,8 +35,8 @@
             <actipro:ChromedTitleBar.RightContent>
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding CloseDialogCommand}"
-                            ContentTemplate="{actipro:GlyphTemplate CloseWindow16}"
-                            Theme="{actipro:ControlTheme TitleBarButton}">
+                            ContentTemplate="{xaml:GlyphTemplate CloseWindow16}"
+                            Theme="{xaml:ControlTheme TitleBarButton}">
                         <Button.Styles>
                             <Style Selector="Button:pointerover /template/ ContentPresenter">
                                 <Setter Property="Background" Value="Red" />

@@ -133,7 +133,7 @@ public sealed class PluginManagerService : IDisposable
         var lib = reader.GetFiles().SingleOrDefault(x => x == item);
         if (lib == null) throw new ApplicationException("Plugin Não encontrado");
 
-        var pluginPath = Path.Combine(PluginDirectory, plugin.Id);
+        var pluginPath = Path.Combine(PluginDirectory, plugin.Id, plugin.Version);
         
         if (!Directory.Exists(pluginPath))
             Directory.CreateDirectory(pluginPath);

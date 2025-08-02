@@ -4,7 +4,7 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:fr="clr-namespace:FastReport.Design;assembly=FastReport.Avalonia"
-                 xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
+                 xmlns:actipro="clr-namespace:ActiproSoftware.UI.Avalonia.Controls.Primitives;assembly=ActiproSoftware.Avalonia.Shared"
                  xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
                  xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                  xmlns:controls="clr-namespace:FastReport.Designer.Controls"

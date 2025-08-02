@@ -5,11 +5,12 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-                     xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                      xmlns:caramelo="https://github.com/rftd/Caramelo.MvvmApp"
                      xmlns:viewModels="clr-namespace:FastReport.Designer.ViewModels"
                      xmlns:commom="clr-namespace:FastReport.Designer.Commom"
                      xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                     xmlns:actipro="clr-namespace:ActiproSoftware.UI.Avalonia.Controls.Primitives;assembly=ActiproSoftware.Avalonia.Shared"
+                     xmlns:xaml="http://schemas.actiprosoftware.com/avaloniaui"
                      mc:Ignorable="d" d:DesignWidth="684" d:DesignHeight="466"
                      WindowStartupLocation="CenterOwner" SystemDecorations="BorderOnly"
                      Width="673" Height="466" CanResize="False">
@@ -35,8 +36,8 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding NewReportCommand}"
                             CommandParameter="{x:Static commom:WelcomeType.None}"
-                            ContentTemplate="{actipro:GlyphTemplate CloseWindow16}"
-                            Theme="{actipro:ControlTheme TitleBarButton}">
+                            ContentTemplate="{xaml:GlyphTemplate CloseWindow16}"
+                            Theme="{xaml:ControlTheme TitleBarButton}">
                         <Button.Styles>
                             <Style Selector="Button:pointerover /template/ ContentPresenter">
                                 <Setter Property="Background" Value="Red" />
