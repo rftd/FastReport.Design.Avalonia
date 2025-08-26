@@ -4,10 +4,10 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:fr="clr-namespace:FastReport.Design;assembly=FastReport.Avalonia"
-                 xmlns:actipro="clr-namespace:ActiproSoftware.UI.Avalonia.Controls.Primitives;assembly=ActiproSoftware.Avalonia.Shared"
                  xmlns:vm="clr-namespace:FastReport.Designer.ViewModels"
                  xmlns:mvvm="https://github.com/rftd/Caramelo.MvvmApp"
                  xmlns:controls="clr-namespace:FastReport.Designer.Controls"
+                 xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
                  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                  x:Class="FastReport.Designer.Views.AppBootstrapperView" 
                  SystemDecorations="BorderOnly" WindowState="Maximized"
@@ -18,11 +18,12 @@
     </Design.DataContext>
     
     <DockPanel>
-        <actipro:ChromedTitleBar DockPanel.Dock="Top">
-            <actipro:ChromedTitleBar.LeftContent>
+        <actipro:WindowTitleBar DockPanel.Dock="Top" Content="{x:Null}"
+                                 CloseCommand="{Binding FinishApp}" >
+            <actipro:WindowTitleBar.LeftContent>
                 <controls:DefaultCaption Title="{Binding Title}"/>
-            </actipro:ChromedTitleBar.LeftContent>
-        </actipro:ChromedTitleBar>
+            </actipro:WindowTitleBar.LeftContent>
+        </actipro:WindowTitleBar>
         <DockPanel LastChildFill="True">
             <Menu Name="MainMenu" DockPanel.Dock="Top">
                 <MenuItem Header="Arquivo"/>
