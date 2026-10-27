@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using System.IO;
 using Avalonia.ReactiveUI;
 using Caramelo.MvvmApp;
 using Caramelo.MvvmApp.Avalonia.Extensions;
@@ -33,7 +34,7 @@ class Program
         
         builder.Logging.AddSerilog(new LoggerConfiguration()
             .Enrich.FromLogContext()
-            .WriteTo.File("Logs\\fastreport_designer.log", rollingInterval: RollingInterval.Day)
+            .WriteTo.File(Path.Combine("Logs", "fastreport_designer.log"), rollingInterval: RollingInterval.Day)
             .CreateLogger(), dispose: true);
         
         // Registrando View/ViewModel
