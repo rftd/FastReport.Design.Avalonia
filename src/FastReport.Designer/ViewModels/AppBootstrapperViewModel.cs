@@ -29,13 +29,20 @@ public partial class AppBootstrapperViewModel : AppViewModel
         
         var args = Environment.GetCommandLineArgs();
         if(args.Length < 2) return;
-        
+
         try
         {
-            Report.Load(args[1]);
+            // --extensao: o programa que chamou entrega o relatório com os dados e os parâmetros.
+            if (args is [_, "--extensao", var extensao, .. var argumentos])
+                ExtensaoAbertura.Abrir(extensao, argumentos, Report);
+            else
+                Report.Load(args[1]);
+
+            RelatorioRecebido = true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Log.LogError(e, "Erro ao carregar o report");
             Dialogs.ErroAsync("Erro ao carregar o report");
         }
     }
@@ -52,6 +59,12 @@ public partial class AppBootstrapperViewModel : AppViewModel
     public Interaction<WelcomeResult, Unit> WelcomeResult { get; }
     
     public Interaction<Unit, bool> CanClose { get; }
+
+    /// <summary>
+    /// Abriu com um relatório na linha de comando: a tela de boas-vindas não aparece, porque o
+    /// "Relatório em branco" dela trocaria o relatório recebido por um vazio.
+    /// </summary>
+    private bool RelatorioRecebido { get; }
 
     #endregion Properties
 
@@ -79,7 +92,7 @@ public partial class AppBootstrapperViewModel : AppViewModel
     {
         try
         {
-            if(!Config.WelcomeEnabled) return;
+            if(!Config.WelcomeEnabled || RelatorioRecebido) return;
         
             var ret = await Dialogs.ShowAsync<WelcomeDialogViewModel, WelcomeResult, DialogOptions>(new DialogOptions());
             await WelcomeResult.Handle(ret);
